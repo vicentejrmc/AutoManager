@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/1.Apresentacao/" />
   <Folder Name="/2.Nucleo/">
+    <Project Path="AutoManager.Aplicacao/AutoManager.Aplicacao.csproj" Id="0903c836-780b-49ef-b1aa-b9a4ec817b8e" />
     <Project Path="AutoManeger.Dominio/AutoManager.Dominio.csproj" />
   </Folder>
   <Folder Name="/3.Infraestrutura/" />
