@@ -4,6 +4,8 @@
     <Project Path="AutoManager.Aplicacao/AutoManager.Aplicacao.csproj" Id="0903c836-780b-49ef-b1aa-b9a4ec817b8e" />
     <Project Path="AutoManeger.Dominio/AutoManager.Dominio.csproj" />
   </Folder>
-  <Folder Name="/3.Infraestrutura/" />
+  <Folder Name="/3.Infraestrutura/">
+    <Project Path="AutoManager.Infraestrutura.Orm/AutoManager.Infraestrutura.Orm.csproj" Id="2506662b-30af-4a3b-b7d2-54f6811ad83c" />
+  </Folder>
   <Folder Name="/4.Testes/" />
 </Solution>
