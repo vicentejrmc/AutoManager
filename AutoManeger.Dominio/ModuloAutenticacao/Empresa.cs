@@ -13,6 +13,15 @@ public class Empresa : EntidadeBase<Empresa>
 
     public Empresa() {}
 
+    public Empresa(string usuario, string senha, string email, string nomeFantasia, ICollection<Funcionario> funcionarios)
+    {
+        Usuario = usuario;
+        Senha = senha;
+        Email = email;
+        NomeFantasia = nomeFantasia;
+        Funcionarios = funcionarios;
+    }
+
     public override void AtualizarRegistro(Empresa registroAtualizado)
     {
         Usuario = registroAtualizado.Usuario;

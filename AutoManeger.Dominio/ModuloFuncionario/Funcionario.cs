@@ -13,6 +13,15 @@ public class Funcionario : EntidadeBase<Funcionario>
 
     public Funcionario() {}
 
+    public Funcionario(string nome, DateTime dataAdmissao, decimal salario, int empresaId, bool estaAtivo)
+    {
+        Nome = nome;
+        DataAdmissao = dataAdmissao;
+        Salario = salario;
+        EmpresaId = empresaId;
+        EstaAtivo = estaAtivo;
+    }
+
     public override void AtualizarRegistro(Funcionario registroAtualizado)
     {
         Nome = registroAtualizado.Nome;
