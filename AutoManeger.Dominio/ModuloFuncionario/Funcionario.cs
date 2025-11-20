@@ -1,6 +1,8 @@
 ﻿using AutoManager.Dominio.Compartilhado;
+using AutoManager.Dominio.ModuloEmpresa;
+using System;
 
-namespace AutoManeger.Dominio.ModuloFuncionario;
+namespace AutoManager.Dominio.ModuloFuncionario;
 
 public class Funcionario : EntidadeBase<Funcionario>
 {
@@ -8,17 +10,26 @@ public class Funcionario : EntidadeBase<Funcionario>
     public string Nome { get; set; }
     public DateTime DataAdmissao { get; set; }
     public decimal Salario { get; set; }
-    public int EmpresaId { get; set; }
+    public Guid EmpresaId { get; set; }
+    public Empresa Empresa { get; set; }
     public bool EstaAtivo { get; set; }
 
     public Funcionario() {}
 
-    public Funcionario(string nome, DateTime dataAdmissao, decimal salario, int empresaId, bool estaAtivo)
+    public Funcionario(
+        string nome,
+        DateTime dataAdmissao,
+        decimal salario,
+        Guid empresaId,
+        Empresa empresa,
+        bool estaAtivo
+        )
     {
         Nome = nome;
         DataAdmissao = dataAdmissao;
         Salario = salario;
         EmpresaId = empresaId;
+        Empresa = empresa;
         EstaAtivo = estaAtivo;
     }
 
@@ -28,29 +39,7 @@ public class Funcionario : EntidadeBase<Funcionario>
         DataAdmissao = registroAtualizado.DataAdmissao;
         Salario = registroAtualizado.Salario;
         EmpresaId = registroAtualizado.EmpresaId;
+        Empresa = registroAtualizado.Empresa;
         EstaAtivo = registroAtualizado.EstaAtivo;
     }
-    
-    public void EditarDados(string nome, DateTime dataAdmissao, decimal salario)
-    {
-        Nome = nome;
-        DataAdmissao = dataAdmissao;
-        Salario = salario;
-    }
-
-    public void EditarPropriosDados(string nome)
-    {
-        Nome = nome;
-    }
-
-    public void Desativar()
-    {
-        EstaAtivo = false;
-    }
-
-    public void Ativar()
-    {
-        EstaAtivo = true;
-    }
-
 }
