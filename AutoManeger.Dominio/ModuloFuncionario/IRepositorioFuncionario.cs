@@ -1,4 +1,4 @@
-﻿using AutoManeger.Dominio.Compartilhado;
+﻿using AutoManager.Dominio.Compartilhado;
 
 namespace AutoManeger.Dominio.ModuloFuncionario;
 

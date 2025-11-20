@@ -1,7 +1,7 @@
 <Solution>
   <Folder Name="/1.Apresentacao/" />
   <Folder Name="/2.Nucleo/">
-    <Project Path="AutoManeger.Dominio/AutoManeger.Dominio.csproj" />
+    <Project Path="AutoManeger.Dominio/AutoManager.Dominio.csproj" />
   </Folder>
   <Folder Name="/3.Infraestrutura/" />
   <Folder Name="/4.Testes/" />

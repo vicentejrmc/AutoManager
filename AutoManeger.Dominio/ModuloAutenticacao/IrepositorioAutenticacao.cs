@@ -1,5 +1,5 @@
-﻿using AutoManeger.Dominio.Compartilhado;
-using AutoManeger.Dominio.ModuloEmpresa;
+﻿using AutoManager.Dominio.Compartilhado;
+using AutoManager.Dominio.ModuloEmpresa;
 
 namespace AutoManeger.Dominio.ModuloAutenticacao;
 

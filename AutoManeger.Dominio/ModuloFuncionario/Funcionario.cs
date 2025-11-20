@@ -1,5 +1,4 @@
-﻿using AutoManeger.Dominio.Compartilhado;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using AutoManager.Dominio.Compartilhado;
 
 namespace AutoManeger.Dominio.ModuloFuncionario;
 

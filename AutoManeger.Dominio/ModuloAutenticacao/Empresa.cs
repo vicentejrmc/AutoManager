@@ -1,7 +1,7 @@
-﻿using AutoManeger.Dominio.Compartilhado;
+﻿using AutoManager.Dominio.Compartilhado;
 using AutoManeger.Dominio.ModuloFuncionario;
 
-namespace AutoManeger.Dominio.ModuloEmpresa;
+namespace AutoManager.Dominio.ModuloEmpresa;
 
 public class Empresa : EntidadeBase<Empresa>
 {
