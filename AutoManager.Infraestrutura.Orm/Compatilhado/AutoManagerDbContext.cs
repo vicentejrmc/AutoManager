@@ -43,7 +43,35 @@ public class AutoManagerDbContext : IdentityDbContext, IUnitOfWork
         if (tenantProvider is not null)
         {
             modelBuilder.Entity<Empresa>()
-                .HasQueryFilter(x => tenantProvider.UsuarioId != null && x.Id.Equals(tenantProvider.UsuarioId));
+                .HasQueryFilter(x => tenantProvider.EmpresaId != null && x.Id.Equals(tenantProvider.EmpresaId));
+
+            modelBuilder.Entity<Aluguel>()
+                .HasQueryFilter(x => tenantProvider.EmpresaId != null && x.EmpresaId.Equals(tenantProvider.EmpresaId));
+
+            modelBuilder.Entity<TaxaServico>()
+                .HasQueryFilter(x => tenantProvider.EmpresaId != null && x.EmpresaId.Equals(tenantProvider.EmpresaId));
+
+            modelBuilder.Entity<PlanoCobranca>()
+               .HasQueryFilter(x => tenantProvider.EmpresaId != null && x.EmpresaId.Equals(tenantProvider.EmpresaId));
+
+            modelBuilder.Entity<Automovel>()
+               .HasQueryFilter(x => tenantProvider.EmpresaId != null && x.EmpresaId.Equals(tenantProvider.EmpresaId));
+
+            modelBuilder.Entity<GrupoAutomovel>()
+               .HasQueryFilter(x => tenantProvider.EmpresaId != null && x.EmpresaId.Equals(tenantProvider.EmpresaId));
+
+            modelBuilder.Entity<Cliente>()
+              .HasQueryFilter(x => tenantProvider.EmpresaId != null && x.EmpresaId.Equals(tenantProvider.EmpresaId));
+
+            modelBuilder.Entity<Condutor>()
+              .HasQueryFilter(x => tenantProvider.EmpresaId != null && x.EmpresaId.Equals(tenantProvider.EmpresaId));
+
+            modelBuilder.Entity<Funcionario>()
+             .HasQueryFilter(x => tenantProvider.EmpresaId != null && x.EmpresaId.Equals(tenantProvider.EmpresaId));
+
+            modelBuilder.Entity<PrecoCombustivel>()
+             .HasQueryFilter(x => tenantProvider.EmpresaId != null && x.EmpresaId.Equals(tenantProvider.EmpresaId));
+
         }
 
         var assembly = typeof(AutoManagerDbContext).Assembly;

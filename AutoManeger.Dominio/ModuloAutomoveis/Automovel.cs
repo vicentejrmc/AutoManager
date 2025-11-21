@@ -1,4 +1,5 @@
 ﻿using AutoManager.Dominio.Compartilhado;
+using AutoManager.Dominio.ModuloEmpresa;
 using AutoManager.Dominio.ModuloGrupoAutomovel;
 
 namespace AutoManager.Dominio.ModuloAutomoveis;
@@ -15,6 +16,8 @@ public class Automovel : EntidadeBase<Automovel>
     public string FotoUrl { get; set; }
     public Guid GrupoAutomovelId { get; set; }
     public GrupoAutomovel GrupoAutomovel { get; set; }
+    public Guid EmpresaId { get; set; }
+    public Empresa Empresa { get; set; }
 
     public Automovel(){}
 
@@ -28,7 +31,9 @@ public class Automovel : EntidadeBase<Automovel>
         int ano,
         string fotoUrl,
         Guid grupoAutomovelId,
-        GrupoAutomovel grupoAutomovel)
+        GrupoAutomovel grupoAutomovel,
+        Guid empresaId
+        )
     {
         Placa = placa;
         Marca = marca;
@@ -40,6 +45,7 @@ public class Automovel : EntidadeBase<Automovel>
         FotoUrl = fotoUrl;
         GrupoAutomovelId = grupoAutomovelId;
         GrupoAutomovel = grupoAutomovel;
+        EmpresaId = empresaId;
     }
 
     public override void AtualizarRegistro(Automovel registroAtualizado)
@@ -53,5 +59,6 @@ public class Automovel : EntidadeBase<Automovel>
         Ano = registroAtualizado.Ano;
         FotoUrl = registroAtualizado.FotoUrl;
         GrupoAutomovelId = registroAtualizado.GrupoAutomovelId;
+        EmpresaId = registroAtualizado.EmpresaId;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoManager.Dominio.Compartilhado;
 using AutoManager.Dominio.ModuloAluguel;
+using AutoManager.Dominio.ModuloEmpresa;
 using AutoManager.Dominio.ModuloGrupoAutomovel;
 
 namespace AutoManager.Dominio.ModuloPlanoDeCobrança;
@@ -11,6 +12,8 @@ public class PlanoCobranca : EntidadeBase<PlanoCobranca>
     public GrupoAutomovel GrupoAutomovel { get; set; }
     public decimal ValorDiaria { get; set; }
     public decimal ValorKm { get; set; }
+    public Guid EmpresaId { get; set; }
+    public Empresa Empresa { get; set; }
     public ICollection<Aluguel> Alugueis { get; set; } = new List<Aluguel>();
 
     public PlanoCobranca(){}
@@ -21,6 +24,7 @@ public class PlanoCobranca : EntidadeBase<PlanoCobranca>
         GrupoAutomovel grupoAutomovel,
         decimal valorDiaria,
         decimal valorKm,
+        Guid empresaId,
         ICollection<Aluguel> alugueis
     )
     {
@@ -29,6 +33,7 @@ public class PlanoCobranca : EntidadeBase<PlanoCobranca>
         GrupoAutomovel = grupoAutomovel;
         ValorDiaria = valorDiaria;
         ValorKm = valorKm;
+        EmpresaId = empresaId;
         Alugueis = alugueis;
     }
 
@@ -39,6 +44,7 @@ public class PlanoCobranca : EntidadeBase<PlanoCobranca>
         GrupoAutomovel = registroAtualizado.GrupoAutomovel;
         ValorDiaria = registroAtualizado.ValorDiaria;
         ValorKm = registroAtualizado.ValorKm;
+        EmpresaId = registroAtualizado.EmpresaId;
         Alugueis = registroAtualizado.Alugueis;
     }
 }

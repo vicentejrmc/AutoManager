@@ -1,6 +1,7 @@
 ﻿using AutoManager.Dominio.Compartilhado;
 using AutoManager.Dominio.ModuloAutomoveis;
 using AutoManager.Dominio.ModuloCondutor;
+using AutoManager.Dominio.ModuloEmpresa;
 using AutoManager.Dominio.ModuloPlanoDeCobrança;
 using AutoManager.Dominio.ModuloTaxaServico;
 
@@ -18,6 +19,8 @@ public class Aluguel : EntidadeBase<Aluguel>
     public DateTime DataPrevistaRetorno { get; set; }
     public DateTime? DataDevolucao { get; set; }
     public decimal ValorTotal { get; set; }
+    public Guid EmpresaId { get; set; }
+    public Empresa Empresa { get; set; }
     public ICollection<TaxaServico> Taxas { get; set; } = new List<TaxaServico>();
 
     public Aluguel() { }
@@ -33,6 +36,7 @@ public class Aluguel : EntidadeBase<Aluguel>
         DateTime dataPrevistaRetorno,
         DateTime? dataDevolucao,
         decimal valorTotal,
+        Guid empresaId,
         ICollection<TaxaServico> taxas
     )
     {
@@ -46,6 +50,7 @@ public class Aluguel : EntidadeBase<Aluguel>
         DataPrevistaRetorno = dataPrevistaRetorno;
         DataDevolucao = dataDevolucao;
         ValorTotal = valorTotal;
+        EmpresaId = empresaId;
         Taxas = taxas;
     }
 
@@ -57,6 +62,7 @@ public class Aluguel : EntidadeBase<Aluguel>
         DataSaida = registroAtualizado.DataSaida;
         DataPrevistaRetorno = registroAtualizado.DataPrevistaRetorno;
         DataDevolucao = registroAtualizado.DataDevolucao;
+        EmpresaId = registroAtualizado.EmpresaId;
         ValorTotal = registroAtualizado.ValorTotal;
     }
 }

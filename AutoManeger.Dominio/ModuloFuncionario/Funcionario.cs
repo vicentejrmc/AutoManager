@@ -13,6 +13,7 @@ public class Funcionario : EntidadeBase<Funcionario>
     public Guid EmpresaId { get; set; }
     public Empresa Empresa { get; set; }
     public bool EstaAtivo { get; set; }
+    public string AspNetUserId { get; set; }
 
     public Funcionario() {}
 
@@ -22,8 +23,10 @@ public class Funcionario : EntidadeBase<Funcionario>
         decimal salario,
         Guid empresaId,
         Empresa empresa,
-        bool estaAtivo
-        )
+        bool estaAtivo,
+        string aspNetUserId
+
+    )
     {
         Nome = nome;
         DataAdmissao = dataAdmissao;
@@ -31,6 +34,7 @@ public class Funcionario : EntidadeBase<Funcionario>
         EmpresaId = empresaId;
         Empresa = empresa;
         EstaAtivo = estaAtivo;
+        AspNetUserId = aspNetUserId;
     }
 
     public override void AtualizarRegistro(Funcionario registroAtualizado)
@@ -41,5 +45,6 @@ public class Funcionario : EntidadeBase<Funcionario>
         EmpresaId = registroAtualizado.EmpresaId;
         Empresa = registroAtualizado.Empresa;
         EstaAtivo = registroAtualizado.EstaAtivo;
+        AspNetUserId = registroAtualizado.AspNetUserId;
     }
 }
