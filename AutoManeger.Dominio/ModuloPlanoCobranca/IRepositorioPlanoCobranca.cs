@@ -1,6 +1,5 @@
 ﻿using AutoManager.Dominio.Compartilhado;
-using AutoManager.Dominio.ModuloPlanoDeCobrança;
 
-namespace AutoManager.Dominio.ModuloPlanoCobrança;
+namespace AutoManager.Dominio.ModuloPlanoCobranca;
 
 public interface IRepositorioPlanoCobranca : IRepositorio<PlanoCobranca>;

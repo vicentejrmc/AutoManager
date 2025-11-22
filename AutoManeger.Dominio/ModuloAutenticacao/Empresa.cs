@@ -4,6 +4,8 @@ using AutoManager.Dominio.ModuloAutomoveis;
 using AutoManager.Dominio.ModuloCliente;
 using AutoManager.Dominio.ModuloCondutor;
 using AutoManager.Dominio.ModuloFuncionario;
+using AutoManager.Dominio.ModuloGrupoAutomovel;
+using AutoManager.Dominio.ModuloPlanoCobranca;
 
 namespace AutoManager.Dominio.ModuloEmpresa;
 
@@ -18,7 +20,8 @@ public class Empresa : EntidadeBase<Empresa>
     public ICollection<Automovel> Automoveis { get; set; } = new List<Automovel>();
     public ICollection<Cliente> Clientes { get; set; } = new List<Cliente>();
     public ICollection<Condutor> Condutores { get; set; } = new List<Condutor>();
-
+    public ICollection<GrupoAutomovel> GruposAutomoveis { get; set; } = new List<GrupoAutomovel>();
+    public ICollection<PlanoCobranca> PlanosCobranca { get; set; } = new List<PlanoCobranca>();
 
     public Empresa() {}
 
@@ -31,7 +34,9 @@ public class Empresa : EntidadeBase<Empresa>
         ICollection<Aluguel> alugueis,
         ICollection<Automovel> automoveis,
         ICollection<Cliente> clientes,
-        ICollection<Condutor> condutores
+        ICollection<Condutor> condutores,
+        ICollection<GrupoAutomovel> gruposAutomoveis,
+        ICollection<PlanoCobranca> planosCobranca
     )
     {
         Usuario = usuario;
@@ -43,6 +48,8 @@ public class Empresa : EntidadeBase<Empresa>
         Automoveis = automoveis;
         Clientes = clientes;
         Condutores = condutores;
+        GruposAutomoveis = gruposAutomoveis;
+        PlanosCobranca = planosCobranca;
     }
 
     public override void AtualizarRegistro(Empresa registroAtualizado)

@@ -2,7 +2,7 @@
 using AutoManager.Dominio.ModuloAutomoveis;
 using AutoManager.Dominio.ModuloCondutor;
 using AutoManager.Dominio.ModuloEmpresa;
-using AutoManager.Dominio.ModuloPlanoDeCobrança;
+using AutoManager.Dominio.ModuloPlanoCobranca;
 using AutoManager.Dominio.ModuloTaxaServico;
 
 namespace AutoManager.Dominio.ModuloAluguel;
@@ -45,7 +45,6 @@ public class Aluguel : EntidadeBase<Aluguel>
         AutomovelId = automovelId;
         Automovel = automovel;
         PlanoDeCobrancaId = planoDeCobrancaId;
-        PlanoDeCobranca = planoDeCobranca;
         DataSaida = dataSaida;
         DataPrevistaRetorno = dataPrevistaRetorno;
         DataDevolucao = dataDevolucao;

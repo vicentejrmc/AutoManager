@@ -3,7 +3,7 @@ using AutoManager.Dominio.ModuloAluguel;
 using AutoManager.Dominio.ModuloEmpresa;
 using AutoManager.Dominio.ModuloGrupoAutomovel;
 
-namespace AutoManager.Dominio.ModuloPlanoDeCobrança;
+namespace AutoManager.Dominio.ModuloPlanoCobranca;
 
 public class PlanoCobranca : EntidadeBase<PlanoCobranca>
 {
@@ -24,8 +24,7 @@ public class PlanoCobranca : EntidadeBase<PlanoCobranca>
         GrupoAutomovel grupoAutomovel,
         decimal valorDiaria,
         decimal valorKm,
-        Guid empresaId,
-        ICollection<Aluguel> alugueis
+        Guid empresaId
     )
     {
         Nome = nome;
@@ -34,7 +33,6 @@ public class PlanoCobranca : EntidadeBase<PlanoCobranca>
         ValorDiaria = valorDiaria;
         ValorKm = valorKm;
         EmpresaId = empresaId;
-        Alugueis = alugueis;
     }
 
     public override void AtualizarRegistro(PlanoCobranca registroAtualizado)

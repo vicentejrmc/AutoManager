@@ -16,9 +16,11 @@ public class RepositorioEmpresaEmOrm : RepositorioBaseEmOrm<Empresa>, IRepositor
        return dbSet
             .Include(e => e.Funcionarios)
             .Include(e => e.Alugueis)
+            .Include(e => e.PlanosCobranca)
             .Include(e => e.Automoveis)
             .Include(e => e.Clientes)
             .Include(e => e.Condutores)
+            .Include(e => e.GruposAutomoveis)
             .FirstOrDefault(e => e.Id == idRegistro);
     }
     
@@ -27,9 +29,11 @@ public class RepositorioEmpresaEmOrm : RepositorioBaseEmOrm<Empresa>, IRepositor
         return dbSet
             .Include(e => e.Funcionarios)
             .Include(e => e.Alugueis)
+            .Include(e => e.PlanosCobranca)
             .Include(e => e.Automoveis)
             .Include(e => e.Clientes)
             .Include(e => e.Condutores)
+            .Include(e => e.GruposAutomoveis)
             .ToList();
     }
 }

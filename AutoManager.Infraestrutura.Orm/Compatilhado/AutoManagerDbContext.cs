@@ -7,7 +7,7 @@ using AutoManager.Dominio.ModuloCondutor;
 using AutoManager.Dominio.ModuloEmpresa;
 using AutoManager.Dominio.ModuloFuncionario;
 using AutoManager.Dominio.ModuloGrupoAutomovel;
-using AutoManager.Dominio.ModuloPlanoDeCobrança;
+using AutoManager.Dominio.ModuloPlanoCobranca;
 using AutoManager.Dominio.ModuloPrecoCombustivel;
 using AutoManager.Dominio.ModuloTaxaServico;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;

@@ -38,6 +38,16 @@ public class MapeadorEmpresaEmOrm : IEntityTypeConfiguration<Empresa>
             .HasForeignKey(a => a.EmpresaId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.HasMany(e => e.PlanosCobranca)
+            .WithOne(p => p.Empresa)
+            .HasForeignKey(p => p.EmpresaId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(e => e.GruposAutomoveis)
+            .WithOne(g => g.Empresa)
+            .HasForeignKey(g => g.EmpresaId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         builder.HasMany(e => e.Automoveis)
             .WithOne(a => a.Empresa)
             .HasForeignKey(a => a.EmpresaId)
