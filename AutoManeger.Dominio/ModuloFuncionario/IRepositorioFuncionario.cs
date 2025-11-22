@@ -1,5 +1,6 @@
 ﻿using AutoManager.Dominio.Compartilhado;
+using AutoManager.Dominio.ModuloFuncionario;
 
 namespace AutoManeger.Dominio.ModuloFuncionario;
 
-internal interface IRepositorioFuncionario : IRepositorio<Funcionario>;
+public interface IRepositorioFuncionario : IRepositorio<Funcionario>;

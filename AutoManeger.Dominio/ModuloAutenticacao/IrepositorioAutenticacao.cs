@@ -3,6 +3,6 @@ using AutoManager.Dominio.ModuloEmpresa;
 
 namespace AutoManeger.Dominio.ModuloAutenticacao;
 
-public interface IrepositorioAutenticacao : IRepositorio<Empresa>
+public interface IRepositorioAutenticacao : IRepositorio<Empresa>
 {
 }

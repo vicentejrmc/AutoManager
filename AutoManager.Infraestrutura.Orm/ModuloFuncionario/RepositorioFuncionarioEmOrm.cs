@@ -1,11 +1,13 @@
 ﻿using AutoManager.Dominio.ModuloFuncionario;
 using AutoManager.Infraestrutura.Orm.Compartilhado;
 using AutoManager.Infraestrutura.Orm.Compatilhado;
+using AutoManeger.Dominio.ModuloFuncionario;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace AutoManager.Infraestrutura.Orm.ModuloFuncionario;
 
-public class RepositorioFuncionarioEmOrm : RepositorioBaseEmOrm<Funcionario>
+public class RepositorioFuncionarioEmOrm : RepositorioBaseEmOrm<Funcionario>, IRepositorioFuncionario
 {
     public RepositorioFuncionarioEmOrm(AutoManagerDbContext dbContext) : base(dbContext) {}
 

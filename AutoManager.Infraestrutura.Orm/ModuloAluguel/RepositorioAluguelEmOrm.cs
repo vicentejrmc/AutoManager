@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AutoManager.Infraestrutura.Orm.ModuloAluguel;
 
-public class RepositorioAluguelEmOrm : RepositorioBaseEmOrm<Aluguel>
+public class RepositorioAluguelEmOrm : RepositorioBaseEmOrm<Aluguel>, IRepositorioAluguel
 {
     public RepositorioAluguelEmOrm(AutoManagerDbContext dbContext) : base(dbContext) { }
 

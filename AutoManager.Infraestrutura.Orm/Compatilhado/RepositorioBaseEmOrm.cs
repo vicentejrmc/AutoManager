@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AutoManager.Infraestrutura.Orm.Compatilhado;
 
-public class RepositorioBaseEmOrm<T> where T : EntidadeBase<T>
+public class RepositorioBaseEmOrm<T> : IRepositorio<T> where T : EntidadeBase<T>
 {
     protected readonly AutoManagerDbContext dbContext;
     protected readonly DbSet<T> dbSet;
@@ -15,28 +15,34 @@ public class RepositorioBaseEmOrm<T> where T : EntidadeBase<T>
         this.dbSet = dbContext.Set<T>();
     }
 
-    public virtual void Inserir(T entidade)
+    public void Inserir(T novoRegistro)
     {
-        dbSet.Add(entidade);
+        dbSet.Add(novoRegistro);
     }
 
-    public virtual void Editar(T entidade)
+    public void Editar(Guid idRegistro, T registroEditado)
     {
-        dbSet.Update(entidade);
+        var existente = SelecionarPorId(idRegistro);
+        if (existente != null)
+            existente.AtualizarRegistro(registroEditado);
+
+        dbSet.Update(existente!);
     }
 
-    public virtual void Excluir(T entidade)
+    public void Excluir(Guid idRegistro)
     {
-        dbSet.Remove(entidade);
-    }
-
-    public virtual T? SelecionarPorId(Guid id)
-    {
-        return dbSet.FirstOrDefault(e => e.Id == id);
+        var existente = SelecionarPorId(idRegistro);
+        if (existente != null)
+            dbSet.Remove(existente);
     }
 
     public virtual List<T> SelecionarTodos()
     {
         return dbSet.ToList();
+    }
+
+    public virtual T SelecionarPorId(Guid idRegistro)
+    {
+        return dbSet.FirstOrDefault(x => x.Id == idRegistro)!;
     }
 }
