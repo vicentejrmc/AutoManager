@@ -28,8 +28,7 @@ public class MapeadorEmpresaEmOrm : IEntityTypeConfiguration<Empresa>
             .HasMaxLength(100)
             .IsRequired();
 
-        // Coleções
-
+        // Relacionamentos
         builder.HasMany(e => e.Funcionarios)
             .WithOne(f => f.Empresa)
             .HasForeignKey(f => f.EmpresaId)
@@ -53,12 +52,12 @@ public class MapeadorEmpresaEmOrm : IEntityTypeConfiguration<Empresa>
         builder.HasMany(e => e.Automoveis)
             .WithOne(a => a.Empresa)
             .HasForeignKey(a => a.EmpresaId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasMany(e => e.Clientes)
-        .WithOne(c => c.Empresa)
-        .HasForeignKey(c => c.EmpresaId)
-        .OnDelete(DeleteBehavior.Cascade);
+        builder.HasMany(e => e.Clientes)
+            .WithOne(c => c.Empresa)
+            .HasForeignKey(c => c.EmpresaId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(e => e.Condutores)
             .WithOne(c => c.Empresa)
@@ -66,17 +65,16 @@ public class MapeadorEmpresaEmOrm : IEntityTypeConfiguration<Empresa>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(e => e.PrecoCombustiveis)
-            .WithOne(c => c.Empresa)
-            .HasForeignKey(c => c.EmpresaId)
+            .WithOne(pc => pc.Empresa)
+            .HasForeignKey(pc => pc.EmpresaId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(e => e.TaxasServico)
-            .WithOne(c => c.Empresa)
-            .HasForeignKey(c => c.EmpresaId)
+            .WithOne(ts => ts.Empresa)
+            .HasForeignKey(ts => ts.EmpresaId)
             .OnDelete(DeleteBehavior.Cascade);
-
-
 
         builder.HasIndex(x => x.Email).IsUnique();
     }
 }
+

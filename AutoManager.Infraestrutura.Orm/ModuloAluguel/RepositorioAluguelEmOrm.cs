@@ -1,6 +1,5 @@
 ﻿using AutoManager.Dominio.ModuloAluguel;
 using AutoManager.Infraestrutura.Orm.Compartilhado;
-using AutoManager.Infraestrutura.Orm.Compatilhado;
 using Microsoft.EntityFrameworkCore;
 
 namespace AutoManager.Infraestrutura.Orm.ModuloAluguel;

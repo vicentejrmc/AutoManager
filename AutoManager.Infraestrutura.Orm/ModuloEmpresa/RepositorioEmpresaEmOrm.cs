@@ -1,5 +1,4 @@
 ﻿using AutoManager.Infraestrutura.Orm.Compartilhado;
-using AutoManager.Infraestrutura.Orm.Compatilhado;
 using Microsoft.EntityFrameworkCore;
 using AutoManager.Dominio.ModuloEmpresa;
 
@@ -12,7 +11,7 @@ public class RepositorioEmpresaEmOrm : RepositorioBaseEmOrm<Empresa>, IRepositor
 
     public override Empresa? SelecionarPorId(Guid idRegistro)
     {
-       return dbSet
+        return dbSet
             .Include(e => e.Funcionarios)
             .Include(e => e.Alugueis)
             .Include(e => e.PlanosCobranca)
@@ -24,7 +23,7 @@ public class RepositorioEmpresaEmOrm : RepositorioBaseEmOrm<Empresa>, IRepositor
             .Include(e => e.TaxasServico)
             .FirstOrDefault(e => e.Id == idRegistro);
     }
-    
+
     public override List<Empresa> SelecionarTodos()
     {
         return dbSet

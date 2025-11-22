@@ -1,6 +1,5 @@
 ﻿using AutoManager.Dominio.ModuloGrupoAutomovel;
 using AutoManager.Infraestrutura.Orm.Compartilhado;
-using AutoManager.Infraestrutura.Orm.Compatilhado;
 using Microsoft.EntityFrameworkCore;
 
 namespace AutoManager.Infraestrutura.Orm.ModuloGrupoAutomovel;

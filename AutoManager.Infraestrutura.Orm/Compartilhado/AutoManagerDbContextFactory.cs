@@ -1,8 +1,7 @@
-﻿using AutoManager.Infraestrutura.Orm.Compartilhado;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace AutoManager.Infraestrutura.Orm.Compatilhado;
+namespace AutoManager.Infraestrutura.Orm.Compartilhado;
 
 public class AutoManagerDbContextFactory : IDesignTimeDbContextFactory<AutoManagerDbContext>
 {

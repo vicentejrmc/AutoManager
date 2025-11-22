@@ -2,7 +2,7 @@
 using AutoManager.Infraestrutura.Orm.Compartilhado;
 using Microsoft.EntityFrameworkCore;
 
-namespace AutoManager.Infraestrutura.Orm.Compatilhado;
+namespace AutoManager.Infraestrutura.Orm.Compartilhado;
 
 public class RepositorioBaseEmOrm<T> : IRepositorio<T> where T : EntidadeBase<T>
 {
