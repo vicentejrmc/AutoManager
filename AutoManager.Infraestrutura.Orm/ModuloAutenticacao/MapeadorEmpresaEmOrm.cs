@@ -21,7 +21,8 @@ public class MapeadorEmpresaEmOrm : IEntityTypeConfiguration<Empresa>
             .IsRequired();
 
         builder.Property(x => x.SenhadHash)
-            .HasMaxLength(250);
+            .HasMaxLength(250)
+            .IsRequired();
 
         builder.Property(x => x.AspNetUserId)
             .HasMaxLength(100)
@@ -41,6 +42,17 @@ public class MapeadorEmpresaEmOrm : IEntityTypeConfiguration<Empresa>
             .WithOne(a => a.Empresa)
             .HasForeignKey(a => a.EmpresaId)
             .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(e => e.Clientes)
+        .WithOne(c => c.Empresa)
+        .HasForeignKey(c => c.EmpresaId)
+        .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(e => e.Condutores)
+            .WithOne(c => c.Empresa)
+            .HasForeignKey(c => c.EmpresaId)
+            .OnDelete(DeleteBehavior.Cascade);
+
 
         builder.HasIndex(x => x.Email).IsUnique();
     }
