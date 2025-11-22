@@ -1,4 +1,5 @@
 ﻿using AutoManager.Dominio.Compartilhado;
+using AutoManager.Dominio.ModuloAluguel;
 using AutoManager.Dominio.ModuloCliente;
 using AutoManager.Dominio.ModuloEmpresa;
 
@@ -16,6 +17,7 @@ public class Condutor : EntidadeBase<Condutor>
     public Cliente Cliente { get; set; }
     public Guid EmpresaId { get; set; }
     public Empresa Empresa { get; set; }
+    public ICollection<Aluguel> Alugueis { get; set; } = new List<Aluguel>();
 
     public Condutor() {}
 
@@ -29,7 +31,8 @@ public class Condutor : EntidadeBase<Condutor>
         Guid clienteId,
         Cliente cliente,
         Guid empresaId,
-        Empresa empresa
+        Empresa empresa,
+        ICollection<Aluguel> alugueis
     )
     {
         Nome = nome;
@@ -42,6 +45,7 @@ public class Condutor : EntidadeBase<Condutor>
         Cliente = cliente;
         EmpresaId = empresaId;
         Empresa = empresa;
+        Alugueis = alugueis;
     }
 
     public override void AtualizarRegistro(Condutor registroAtualizado)
@@ -56,5 +60,6 @@ public class Condutor : EntidadeBase<Condutor>
         Cliente = registroAtualizado.Cliente;
         EmpresaId = registroAtualizado.EmpresaId;
         Empresa = registroAtualizado.Empresa;
+        Alugueis = registroAtualizado.Alugueis;
     }
 }
