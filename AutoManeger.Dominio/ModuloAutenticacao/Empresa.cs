@@ -1,6 +1,7 @@
 ﻿using AutoManager.Dominio.Compartilhado;
 using AutoManager.Dominio.ModuloAluguel;
 using AutoManager.Dominio.ModuloAutomoveis;
+using AutoManager.Dominio.ModuloCliente;
 using AutoManager.Dominio.ModuloFuncionario;
 
 namespace AutoManager.Dominio.ModuloEmpresa;
@@ -14,6 +15,7 @@ public class Empresa : EntidadeBase<Empresa>
     public ICollection<Funcionario> Funcionarios { get; set; } = new List<Funcionario>();
     public ICollection<Aluguel> Alugueis { get; set; } = new List<Aluguel>();
     public ICollection<Automovel> Automoveis { get; set; } = new List<Automovel>();
+    public ICollection<Cliente> Clientes { get; set; } = new List<Cliente>();
 
     public Empresa() {}
 
@@ -24,7 +26,8 @@ public class Empresa : EntidadeBase<Empresa>
         string aspNetUserId,
         ICollection<Funcionario> funcionarios,
         ICollection<Aluguel> alugueis,
-        ICollection<Automovel> automoveis
+        ICollection<Automovel> automoveis,
+        ICollection<Cliente> clientes
     )
     {
         Usuario = usuario;
@@ -34,6 +37,7 @@ public class Empresa : EntidadeBase<Empresa>
         Funcionarios = funcionarios;
         Alugueis = alugueis;
         Automoveis = automoveis;
+        Clientes = clientes;
     }
 
     public override void AtualizarRegistro(Empresa registroAtualizado)
@@ -45,5 +49,6 @@ public class Empresa : EntidadeBase<Empresa>
         Funcionarios = registroAtualizado.Funcionarios;
         Alugueis = registroAtualizado.Alugueis;
         Automoveis = registroAtualizado.Automoveis;
+        Clientes = registroAtualizado.Clientes;
     }
 }
