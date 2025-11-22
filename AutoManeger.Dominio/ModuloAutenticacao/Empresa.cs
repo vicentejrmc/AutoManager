@@ -6,6 +6,8 @@ using AutoManager.Dominio.ModuloCondutor;
 using AutoManager.Dominio.ModuloFuncionario;
 using AutoManager.Dominio.ModuloGrupoAutomovel;
 using AutoManager.Dominio.ModuloPlanoCobranca;
+using AutoManager.Dominio.ModuloPrecoCombustivel;
+using AutoManager.Dominio.ModuloTaxaServico;
 
 namespace AutoManager.Dominio.ModuloEmpresa;
 
@@ -22,6 +24,8 @@ public class Empresa : EntidadeBase<Empresa>
     public ICollection<Condutor> Condutores { get; set; } = new List<Condutor>();
     public ICollection<GrupoAutomovel> GruposAutomoveis { get; set; } = new List<GrupoAutomovel>();
     public ICollection<PlanoCobranca> PlanosCobranca { get; set; } = new List<PlanoCobranca>();
+    public ICollection<PrecoCombustivel> PrecoCombustiveis { get; set; } = new List<PrecoCombustivel>();
+    public ICollection<TaxaServico> TaxasServico { get; set; } = new List<TaxaServico>();
 
     public Empresa() {}
 
@@ -36,7 +40,9 @@ public class Empresa : EntidadeBase<Empresa>
         ICollection<Cliente> clientes,
         ICollection<Condutor> condutores,
         ICollection<GrupoAutomovel> gruposAutomoveis,
-        ICollection<PlanoCobranca> planosCobranca
+        ICollection<PlanoCobranca> planosCobranca,
+        ICollection<PrecoCombustivel> precoCombustivels,
+        ICollection<TaxaServico> taxasServico
     )
     {
         Usuario = usuario;
@@ -50,6 +56,8 @@ public class Empresa : EntidadeBase<Empresa>
         Condutores = condutores;
         GruposAutomoveis = gruposAutomoveis;
         PlanosCobranca = planosCobranca;
+        PrecoCombustiveis = precoCombustivels;
+        TaxasServico = taxasServico;
     }
 
     public override void AtualizarRegistro(Empresa registroAtualizado)

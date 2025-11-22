@@ -21,6 +21,8 @@ public class RepositorioEmpresaEmOrm : RepositorioBaseEmOrm<Empresa>, IRepositor
             .Include(e => e.Clientes)
             .Include(e => e.Condutores)
             .Include(e => e.GruposAutomoveis)
+            .Include(e => e.PrecoCombustiveis)
+            .Include(e => e.TaxasServico)
             .FirstOrDefault(e => e.Id == idRegistro);
     }
     
@@ -34,6 +36,8 @@ public class RepositorioEmpresaEmOrm : RepositorioBaseEmOrm<Empresa>, IRepositor
             .Include(e => e.Clientes)
             .Include(e => e.Condutores)
             .Include(e => e.GruposAutomoveis)
+            .Include(e => e.PrecoCombustiveis)
+            .Include(e => e.TaxasServico)
             .ToList();
     }
 }

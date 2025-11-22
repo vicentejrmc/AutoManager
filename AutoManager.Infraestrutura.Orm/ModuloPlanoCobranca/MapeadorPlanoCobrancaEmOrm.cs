@@ -1,5 +1,4 @@
 ﻿using AutoManager.Dominio.ModuloPlanoCobranca;
-using AutoManager.Dominio.ModuloPlanoDeCobranca;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

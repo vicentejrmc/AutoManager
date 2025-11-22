@@ -28,6 +28,8 @@ public class MapeadorEmpresaEmOrm : IEntityTypeConfiguration<Empresa>
             .HasMaxLength(100)
             .IsRequired();
 
+        // Coleções
+
         builder.HasMany(e => e.Funcionarios)
             .WithOne(f => f.Empresa)
             .HasForeignKey(f => f.EmpresaId)
@@ -62,6 +64,17 @@ public class MapeadorEmpresaEmOrm : IEntityTypeConfiguration<Empresa>
             .WithOne(c => c.Empresa)
             .HasForeignKey(c => c.EmpresaId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(e => e.PrecoCombustiveis)
+            .WithOne(c => c.Empresa)
+            .HasForeignKey(c => c.EmpresaId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(e => e.TaxasServico)
+            .WithOne(c => c.Empresa)
+            .HasForeignKey(c => c.EmpresaId)
+            .OnDelete(DeleteBehavior.Cascade);
+
 
 
         builder.HasIndex(x => x.Email).IsUnique();
