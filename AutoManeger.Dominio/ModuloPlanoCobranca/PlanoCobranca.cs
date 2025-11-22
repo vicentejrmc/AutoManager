@@ -43,6 +43,5 @@ public class PlanoCobranca : EntidadeBase<PlanoCobranca>
         ValorDiaria = registroAtualizado.ValorDiaria;
         ValorKm = registroAtualizado.ValorKm;
         EmpresaId = registroAtualizado.EmpresaId;
-        Alugueis = registroAtualizado.Alugueis;
     }
 }
