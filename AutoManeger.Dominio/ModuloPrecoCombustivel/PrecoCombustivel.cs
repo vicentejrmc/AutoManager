@@ -1,5 +1,5 @@
 ﻿using AutoManager.Dominio.Compartilhado;
-using AutoManager.Dominio.ModuloAutenticacao;
+using AutoManager.Dominio.ModuloEmpresa;
 
 namespace AutoManager.Dominio.ModuloPrecoCombustivel;
 

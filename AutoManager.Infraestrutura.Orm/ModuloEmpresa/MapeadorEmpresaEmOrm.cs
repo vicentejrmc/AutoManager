@@ -1,8 +1,8 @@
-﻿using AutoManager.Dominio.ModuloAutenticacao;
+﻿using AutoManager.Dominio.ModuloEmpresa;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace AutoManager.Infraestrutura.Orm.ModuloAutenticacao;
+namespace AutoManager.Infraestrutura.Orm.ModuloEmpresa;
 
 public class MapeadorEmpresaEmOrm : IEntityTypeConfiguration<Empresa>
 {

@@ -3,7 +3,7 @@ using AutoManager.Infraestrutura.Orm.Compartilhado;
 using AutoManager.Infraestrutura.Orm.Compatilhado;
 using Microsoft.EntityFrameworkCore;
 
-namespace AutoManager.Infraestrutura.Orm.ModuloPlanoDeCobranca;
+namespace AutoManager.Infraestrutura.Orm.ModuloPlanoCobranca;
 
 public class RepositorioPlanoCobrancaEmOrm : RepositorioBaseEmOrm<PlanoCobranca>, IRepositorioPlanoCobranca
 {

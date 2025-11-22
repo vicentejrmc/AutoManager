@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace AutoManager.Infraestrutura.Orm.ModuloPlanoDeCobranca;
+namespace AutoManager.Infraestrutura.Orm.ModuloPlanoCobranca;
 
 public class MapeadorPlanoCobrancaEmOrm : IEntityTypeConfiguration<PlanoCobranca>
 {

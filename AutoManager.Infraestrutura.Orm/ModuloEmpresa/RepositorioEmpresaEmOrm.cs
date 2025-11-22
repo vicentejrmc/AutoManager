@@ -1,11 +1,11 @@
 ﻿using AutoManager.Infraestrutura.Orm.Compartilhado;
 using AutoManager.Infraestrutura.Orm.Compatilhado;
-using AutoManager.Dominio.ModuloAutenticacao;
 using Microsoft.EntityFrameworkCore;
+using AutoManager.Dominio.ModuloEmpresa;
 
-namespace AutoManager.Infraestrutura.Orm.ModuloAutenticacao;
+namespace AutoManager.Infraestrutura.Orm.ModuloEmpresa;
 
-public class RepositorioEmpresaEmOrm : RepositorioBaseEmOrm<Empresa>, IRepositorioAutenticacao
+public class RepositorioEmpresaEmOrm : RepositorioBaseEmOrm<Empresa>, IRepositorioEmpresa
 {
     public RepositorioEmpresaEmOrm(AutoManagerDbContext dbContext)
         : base(dbContext) { }

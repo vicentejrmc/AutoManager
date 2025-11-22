@@ -9,7 +9,7 @@ using AutoManager.Dominio.ModuloPlanoCobranca;
 using AutoManager.Dominio.ModuloPrecoCombustivel;
 using AutoManager.Dominio.ModuloTaxaServico;
 
-namespace AutoManager.Dominio.ModuloAutenticacao;
+namespace AutoManager.Dominio.ModuloEmpresa;
 
 public class Empresa : EntidadeBase<Empresa>
 {
@@ -41,7 +41,7 @@ public class Empresa : EntidadeBase<Empresa>
         ICollection<Condutor> condutores,
         ICollection<GrupoAutomovel> gruposAutomoveis,
         ICollection<PlanoCobranca> planosCobranca,
-        ICollection<PrecoCombustivel> precoCombustivels,
+        ICollection<PrecoCombustivel> precoCombustiveis,
         ICollection<TaxaServico> taxasServico
     )
     {
@@ -56,7 +56,7 @@ public class Empresa : EntidadeBase<Empresa>
         Condutores = condutores;
         GruposAutomoveis = gruposAutomoveis;
         PlanosCobranca = planosCobranca;
-        PrecoCombustiveis = precoCombustivels;
+        PrecoCombustiveis = precoCombustiveis;
         TaxasServico = taxasServico;
     }
 

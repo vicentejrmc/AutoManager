@@ -1,8 +1,7 @@
 ﻿using AutoManager.Dominio.Compartilhado;
-using AutoManager.Dominio.ModuloAutenticacao;
 using AutoManager.Dominio.ModuloAutomoveis;
 using AutoManager.Dominio.ModuloCondutor;
-
+using AutoManager.Dominio.ModuloEmpresa;
 using AutoManager.Dominio.ModuloPlanoCobranca;
 using AutoManager.Dominio.ModuloTaxaServico;
 
