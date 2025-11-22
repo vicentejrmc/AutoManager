@@ -1,7 +1,8 @@
 ﻿using AutoManager.Dominio.Compartilhado;
 using AutoManager.Dominio.ModuloAluguel;
+using AutoManager.Dominio.ModuloAutenticacao;
 using AutoManager.Dominio.ModuloCliente;
-using AutoManager.Dominio.ModuloEmpresa;
+
 
 namespace AutoManager.Dominio.ModuloCondutor;
 

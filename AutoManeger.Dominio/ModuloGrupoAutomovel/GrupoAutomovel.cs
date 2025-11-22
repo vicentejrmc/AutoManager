@@ -1,6 +1,6 @@
 ﻿using AutoManager.Dominio.Compartilhado;
+using AutoManager.Dominio.ModuloAutenticacao;
 using AutoManager.Dominio.ModuloAutomoveis;
-using AutoManager.Dominio.ModuloEmpresa;
 using AutoManager.Dominio.ModuloPlanoCobranca;
 
 namespace AutoManager.Dominio.ModuloGrupoAutomovel;

@@ -1,6 +1,5 @@
 ﻿using AutoManager.Dominio.Compartilhado;
-using AutoManager.Dominio.ModuloEmpresa;
-using System;
+using AutoManager.Dominio.ModuloAutenticacao;
 
 namespace AutoManager.Dominio.ModuloFuncionario;
 

@@ -1,7 +1,6 @@
-﻿using AutoManager.Dominio.ModuloEmpresa;
-using AutoManager.Infraestrutura.Orm.Compartilhado;
+﻿using AutoManager.Infraestrutura.Orm.Compartilhado;
 using AutoManager.Infraestrutura.Orm.Compatilhado;
-using AutoManeger.Dominio.ModuloAutenticacao;
+using AutoManager.Dominio.ModuloAutenticacao;
 using Microsoft.EntityFrameworkCore;
 
 namespace AutoManager.Infraestrutura.Orm.ModuloAutenticacao;

@@ -4,7 +4,6 @@ using AutoManager.Dominio.ModuloAutenticacao;
 using AutoManager.Dominio.ModuloAutomoveis;
 using AutoManager.Dominio.ModuloCliente;
 using AutoManager.Dominio.ModuloCondutor;
-using AutoManager.Dominio.ModuloEmpresa;
 using AutoManager.Dominio.ModuloFuncionario;
 using AutoManager.Dominio.ModuloGrupoAutomovel;
 using AutoManager.Dominio.ModuloPlanoCobranca;

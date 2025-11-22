@@ -9,7 +9,7 @@ using AutoManager.Dominio.ModuloPlanoCobranca;
 using AutoManager.Dominio.ModuloPrecoCombustivel;
 using AutoManager.Dominio.ModuloTaxaServico;
 
-namespace AutoManager.Dominio.ModuloEmpresa;
+namespace AutoManager.Dominio.ModuloAutenticacao;
 
 public class Empresa : EntidadeBase<Empresa>
 {

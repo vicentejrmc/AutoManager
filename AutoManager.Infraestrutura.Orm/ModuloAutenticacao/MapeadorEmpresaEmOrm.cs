@@ -1,4 +1,4 @@
-﻿using AutoManager.Dominio.ModuloEmpresa;
+﻿using AutoManager.Dominio.ModuloAutenticacao;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
