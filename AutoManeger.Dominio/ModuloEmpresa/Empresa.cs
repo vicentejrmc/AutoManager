@@ -15,7 +15,7 @@ public class Empresa : EntidadeBase<Empresa>
 {
     public string Usuario { get; set; }
     public string Email { get; set; }
-    public string SenhadHash { get; set; } 
+    public string SenhaHash { get; set; } 
     public string AspNetUserId { get; set; }
     public ICollection<Funcionario> Funcionarios { get; set; } = new List<Funcionario>();
     public ICollection<Aluguel> Alugueis { get; set; } = new List<Aluguel>();

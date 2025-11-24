@@ -12,11 +12,11 @@ public class MapeadorFuncionarioEmOrm : IEntityTypeConfiguration<Funcionario>
              .ValueGeneratedNever()
              .IsRequired();
 
-        builder.Property(x => x.Nome)
+        builder.Property(x => x.Email)
             .HasMaxLength(100)
             .IsRequired();
 
-        builder.Property(x => x.senhaHash)
+        builder.Property(x => x.SenhaHash)
             .HasMaxLength(50)
             .IsRequired();
 

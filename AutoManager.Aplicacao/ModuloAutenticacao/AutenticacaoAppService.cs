@@ -6,6 +6,7 @@ using AutoManager.Infraestrutura.Orm.Compartilhado;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.EntityFrameworkCore;
 
 namespace AutoManager.Aplicacao.ModuloAutenticacao;
 
@@ -14,21 +15,25 @@ public class AutenticacaoAppService
     private readonly AutoManagerDbContext dbContext;
     private readonly IHttpContextAccessor httpContextAccessor;
     private readonly ITenantProvider tenantProvider;
+    private readonly IPasswordHasher passwordHasher;
 
     public AutenticacaoAppService(
         AutoManagerDbContext dbContext,
         IHttpContextAccessor httpContextAccessor,
-        ITenantProvider tenantProvider
+        ITenantProvider tenantProvider,
+        IPasswordHasher passwordHasher  
     )
     {
         this.dbContext = dbContext;
         this.httpContextAccessor = httpContextAccessor;
         this.tenantProvider = tenantProvider;
+        this.passwordHasher = passwordHasher;
     }
 
-    public Result RegistrarEmpresa(string usuario, string email, string senhaHash)
+    public Result RegistrarEmpresa(string usuario, string email, string senhaPlana)
     {
-        if (dbContext.Empresas.Any(e => e.Email == email))
+        // Ignorar filtros para checar existência globalmente
+        if (dbContext.Empresas.IgnoreQueryFilters().Any(e => e.Email == email))
             return Result.Fail("Já existe uma empresa cadastrada com este e-mail.");
 
         var aspNetUserId = Guid.NewGuid().ToString();
@@ -38,7 +43,7 @@ public class AutenticacaoAppService
             Id = Guid.NewGuid(),
             Usuario = usuario,
             Email = email,
-            SenhadHash = senhaHash,
+            SenhaHash = passwordHasher.SenhaHash(senhaPlana),
             AspNetUserId = aspNetUserId
         };
 
@@ -49,8 +54,8 @@ public class AutenticacaoAppService
     }
 
     public Result RegistrarFuncionario(
-        string nome,
-        string senhaHash,
+        string email,
+        string senhaPlana,
         DateTime dataAdmissao,
         decimal salario,
         Guid empresaId
@@ -60,14 +65,14 @@ public class AutenticacaoAppService
         if (empresa == null)
             return Result.Fail(ErrorResults.RegistroNaoEncontrado(empresaId));
 
-        if (dbContext.Funcionarios.Any(f => f.Nome == nome && f.EmpresaId == empresaId))
-            return Result.Fail(ErrorResults.RegistroDuplicado($"Ja existe um funcionario chamado {nome} cadsatrado nesta empresa."));
+        if (dbContext.Funcionarios.Any(f => f.Email == email && f.EmpresaId == empresaId))
+            return Result.Fail(ErrorResults.RegistroDuplicado($"Ja existe um funcionario com este email: {email} cadsatrado nesta empresa."));
 
         var aspNetUserId = Guid.NewGuid().ToString();
 
         var funcionario = new Funcionario(
-            nome,
-            senhaHash,
+            email,
+            passwordHasher.SenhaHash(senhaPlana),
             dataAdmissao,
             salario,
             empresaId,
@@ -82,28 +87,33 @@ public class AutenticacaoAppService
         return Result.Ok("Funcionario registrado com sucesso.");
     }
 
-    public async Task<Result> LoginAsync(string usuarioOuEmail, string senhaHash)
+    public async Task<Result> LoginAsync(string usuarioOuEmail, string senhaPlana)
     {
-        var empresa = dbContext.Empresas.FirstOrDefault(e => e.Email == usuarioOuEmail || e.Usuario == usuarioOuEmail);
-        var funcionario = dbContext.Funcionarios.FirstOrDefault(f => f.Nome == usuarioOuEmail);
+        var empresa = dbContext.Empresas
+            .IgnoreQueryFilters()
+            .FirstOrDefault(e => e.Email == usuarioOuEmail || e.Usuario == usuarioOuEmail);
+
+        var funcionario = dbContext.Funcionarios
+            .IgnoreQueryFilters()
+            .FirstOrDefault(f => f.Email == usuarioOuEmail);
 
         if (empresa == null && funcionario == null)
-            return Result.Fail($"Usuário como o registro {usuarioOuEmail} não foi encontrado");
+            return Result.Fail($"Usuário {usuarioOuEmail} não foi encontrado.");
 
         if (empresa != null)
         {
-            if (empresa.SenhadHash != senhaHash)
+            if (!passwordHasher.VerificarSenhaHash(empresa.SenhaHash, senhaPlana))
                 return Result.Fail(ErrorResults.RequisicaoInvalida("Senha incorreta."));
         }
         else if (funcionario != null)
         {
-            if (funcionario.SenhaHash != senhaHash)
+            if (!passwordHasher.VerificarSenhaHash(funcionario.SenhaHash, senhaPlana))
                 return Result.Fail(ErrorResults.RequisicaoInvalida("Senha incorreta."));
         }
 
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, empresa != null ? empresa.Usuario : funcionario!.Nome),
+            new Claim(ClaimTypes.Name, empresa != null ? empresa.Usuario : funcionario!.Email),
             new Claim(ClaimTypes.NameIdentifier, empresa != null ? empresa.AspNetUserId : funcionario!.AspNetUserId),
             new Claim(ClaimTypes.Role, empresa != null ? "Empresa" : "Funcionario"),
             new Claim("EmpresaId", empresa?.Id.ToString() ?? funcionario!.EmpresaId.ToString()),

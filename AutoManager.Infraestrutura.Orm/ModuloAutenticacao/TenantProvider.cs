@@ -1,5 +1,4 @@
 ﻿using AutoManager.Dominio.ModuloAutenticacao;
-using AutoManager.Infraestrutura.Orm.Compartilhado;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
@@ -7,14 +6,11 @@ namespace AutoManager.Infraestrutura.Orm.ModuloAutenticacao;
 
 internal class TenantProvider : ITenantProvider
 {
-
     private readonly IHttpContextAccessor httpContextAccessor;
-    private readonly AutoManagerDbContext dbContext;
 
-    public TenantProvider(IHttpContextAccessor httpContextAccessor, AutoManagerDbContext dbContext)
+    public TenantProvider(IHttpContextAccessor httpContextAccessor)
     {
         this.httpContextAccessor = httpContextAccessor;
-        this.dbContext = dbContext;
     }
 
     public Guid? EmpresaId
@@ -23,18 +19,12 @@ internal class TenantProvider : ITenantProvider
         {
             var user = httpContextAccessor.HttpContext?.User;
 
-            if(user == null || !user.Identity?.IsAuthenticated == true)
+            if (user == null || user.Identity == null || !user.Identity.IsAuthenticated)
                 return null;
 
-            var aspNetUserId = user.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var empresa = dbContext.Empresas.FirstOrDefault(e => e.AspNetUserId == aspNetUserId);
-            if (empresa != null)
-                return empresa.Id;
-
-            var funcionario = dbContext.Funcionarios.FirstOrDefault(f => f.AspNetUserId == aspNetUserId);
-            if (funcionario != null)
-                return funcionario.EmpresaId;
+            var empresaClaim = user.FindFirst("EmpresaId")?.Value;
+            if (Guid.TryParse(empresaClaim, out var id))
+                return id;
 
             return null;
         }

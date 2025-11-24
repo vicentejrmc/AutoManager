@@ -20,7 +20,7 @@ public class MapeadorEmpresaEmOrm : IEntityTypeConfiguration<Empresa>
             .HasMaxLength(150)
             .IsRequired();
 
-        builder.Property(x => x.SenhadHash)
+        builder.Property(x => x.SenhaHash)
             .HasColumnType("varchar(250)")
             .IsRequired();
 
