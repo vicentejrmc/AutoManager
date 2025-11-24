@@ -21,7 +21,7 @@ public class MapeadorEmpresaEmOrm : IEntityTypeConfiguration<Empresa>
             .IsRequired();
 
         builder.Property(x => x.SenhadHash)
-            .HasMaxLength(250)
+            .HasColumnType("varchar(250)")
             .IsRequired();
 
         builder.Property(x => x.AspNetUserId)

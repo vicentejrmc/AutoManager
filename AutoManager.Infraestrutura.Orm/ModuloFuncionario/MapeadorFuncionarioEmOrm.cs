@@ -16,6 +16,10 @@ public class MapeadorFuncionarioEmOrm : IEntityTypeConfiguration<Funcionario>
             .HasMaxLength(100)
             .IsRequired();
 
+        builder.Property(x => x.senhaHash)
+            .HasMaxLength(50)
+            .IsRequired();
+
         builder.Property(x => x.DataAdmissao)
             .IsRequired();
 

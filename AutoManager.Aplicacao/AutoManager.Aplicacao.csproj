@@ -7,10 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="15.1.0" />
     <PackageReference Include="FluentResults" Version="4.0.0" />
+    <PackageReference Include="FluentValidation" Version="12.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AutoManager.Infraestrutura.Orm\AutoManager.Infraestrutura.Orm.csproj" />
     <ProjectReference Include="..\AutoManeger.Dominio\AutoManager.Dominio.csproj" />
   </ItemGroup>
 
