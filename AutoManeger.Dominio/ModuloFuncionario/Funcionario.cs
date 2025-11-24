@@ -7,7 +7,7 @@ public class Funcionario : EntidadeBase<Funcionario>
 {
 
     public string Nome { get; set; }
-    public string senhaHash { get; set; }
+    public string SenhaHash { get; set; }
     public DateTime DataAdmissao { get; set; }
     public decimal Salario { get; set; }
     public Guid EmpresaId { get; set; }
@@ -30,7 +30,7 @@ public class Funcionario : EntidadeBase<Funcionario>
     )
     {
         Nome = nome;
-        this.senhaHash = senhaHash;
+        SenhaHash = senhaHash;
         DataAdmissao = dataAdmissao;
         Salario = salario;
         EmpresaId = empresaId;
@@ -42,7 +42,7 @@ public class Funcionario : EntidadeBase<Funcionario>
     public override void AtualizarRegistro(Funcionario registroAtualizado)
     {
         Nome = registroAtualizado.Nome;
-        senhaHash = registroAtualizado.senhaHash;
+        SenhaHash = registroAtualizado.SenhaHash;
         DataAdmissao = registroAtualizado.DataAdmissao;
         Salario = registroAtualizado.Salario;
         EmpresaId = registroAtualizado.EmpresaId;
