@@ -32,7 +32,7 @@ public class Empresa : EntidadeBase<Empresa>
     public Empresa(
         string usuario,
         string email,
-        string senhadHash,
+        string senhaHash,
         string aspNetUserId,
         ICollection<Funcionario> funcionarios,
         ICollection<Aluguel> alugueis,
@@ -47,7 +47,7 @@ public class Empresa : EntidadeBase<Empresa>
     {
         Usuario = usuario;
         Email = email;
-        SenhadHash = senhadHash;
+        SenhaHash = senhaHash;
         AspNetUserId = aspNetUserId;
         Funcionarios = funcionarios;
         Alugueis = alugueis;
@@ -64,7 +64,7 @@ public class Empresa : EntidadeBase<Empresa>
     {
         Usuario = registroAtualizado.Usuario;
         Email = registroAtualizado.Email;
-        SenhadHash = registroAtualizado.SenhadHash;
+        SenhaHash = registroAtualizado.SenhaHash;
         AspNetUserId = registroAtualizado.AspNetUserId;
     }
 }
