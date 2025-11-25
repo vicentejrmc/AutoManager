@@ -1,6 +1,5 @@
 ﻿using AutoManager.Dominio.ModuloAutenticacao;
 using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
 
 namespace AutoManager.Infraestrutura.Orm.ModuloAutenticacao;
 
