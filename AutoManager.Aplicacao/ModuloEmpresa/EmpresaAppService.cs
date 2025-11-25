@@ -9,12 +9,12 @@ namespace AutoManager.Aplicacao.ModuloEmpresa
     {
         private readonly AutoManagerDbContext dbContext;
         private readonly IPasswordHasher passwordHasher;
-        private readonly EmpresaValidador validador;
+        private readonly ValidadorEmpresa validador;
 
         public EmpresaAppService(
             AutoManagerDbContext dbContext,
             IPasswordHasher passwordHasher,
-            EmpresaValidador validador)
+            ValidadorEmpresa validador)
         {
             this.dbContext = dbContext;
             this.passwordHasher = passwordHasher;

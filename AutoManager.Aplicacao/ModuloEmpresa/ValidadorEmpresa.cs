@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace AutoManager.Aplicacao.ModuloEmpresa
 {
-    public class EmpresaValidador : ValidadorBase<Empresa>
+    public class ValidadorEmpresa : ValidadorBase<Empresa>
     {
         public override Result<Empresa> Validar(Empresa entidade)
         {
