@@ -1,10 +1,19 @@
 ﻿using AutoManager.Aplicacao.Compartilhado;
 using AutoManager.Dominio.ModuloAluguel;
+using AutoManager.Dominio.ModuloAutenticacao;
 
 namespace AutoManager.Aplicacao.ModuloAluguel;
 
 public class ValidadorAluguel : ValidadorBase<Aluguel>
 {
+
+    private readonly ITenantProvider tenantProvider;
+
+    public ValidadorAluguel(ITenantProvider tenantProvider)
+    {
+        this.tenantProvider = tenantProvider;
+    }
+
     public override Result<Aluguel> Validar(Aluguel aluguel)
     {
         if (aluguel.CondutorId == Guid.Empty)
@@ -14,7 +23,7 @@ public class ValidadorAluguel : ValidadorBase<Aluguel>
             return Result<Aluguel>.Fail(ErrorResults.RequisicaoInvalida("Automóvel é obrigatório."));
 
         if (aluguel.PlanoDeCobrancaId == Guid.Empty)
-            return Result<Aluguel>.Fail(ErrorResults.RequisicaoInvalida("Plando de cobrança é obrigatório"));
+            return Result<Aluguel>.Fail(ErrorResults.RequisicaoInvalida("Plano de cobrança é obrigatório"));
 
         if (aluguel.DataSaida == default)
             return Result<Aluguel>.Fail(ErrorResults.RequisicaoInvalida("Data de saída é obrigatoria."));
@@ -29,5 +38,16 @@ public class ValidadorAluguel : ValidadorBase<Aluguel>
             return Result<Aluguel>.Fail(ErrorResults.RequisicaoInvalida("O valor total do aluguel não pode ser menor ou igual a zero"));
 
         return Result<Aluguel>.Ok(aluguel);
+    }
+
+    public Result ValidarExclusao(Aluguel aluguel)
+    {
+        if(!tenantProvider.IsInRole("Empresa"))
+            return Result.Fail(ErrorResults.RequisicaoInvalida("Apenas o usuario Empresa pode excluir um aluguel."));
+
+        if(aluguel.Status == StatusAluguelEnum.EmAndamento)
+            return Result.Fail(ErrorResults.RequisicaoInvalida("Aluguel em andamento não pode ser excluído."));
+        
+        return Result.Ok("Exclusão realizada com sucesso.");
     }
 }

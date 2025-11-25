@@ -22,7 +22,7 @@ public class Aluguel : EntidadeBase<Aluguel>
     public Guid EmpresaId { get; set; }
     public Empresa Empresa { get; set; }
     public ICollection<TaxaServico> Taxas { get; set; } = new List<TaxaServico>();
-    public bool Ativo { get; set; } = true;
+    public StatusAluguelEnum Status { get; set; } = StatusAluguelEnum.EmAndamento;
 
     public Aluguel() { }
 
@@ -39,7 +39,7 @@ public class Aluguel : EntidadeBase<Aluguel>
         decimal valorTotal,
         Guid empresaId,
         ICollection<TaxaServico> taxas,
-        bool ativo = true
+        StatusAluguelEnum status = StatusAluguelEnum.EmAndamento
     )
     {
         CondutorId = condutorId;
@@ -53,7 +53,7 @@ public class Aluguel : EntidadeBase<Aluguel>
         ValorTotal = valorTotal;
         EmpresaId = empresaId;
         Taxas = taxas;
-        Ativo = ativo;
+        Status = status;
     }
 
     public override void AtualizarRegistro(Aluguel registroAtualizado)
@@ -66,7 +66,7 @@ public class Aluguel : EntidadeBase<Aluguel>
         DataDevolucao = registroAtualizado.DataDevolucao;
         EmpresaId = registroAtualizado.EmpresaId;
         ValorTotal = registroAtualizado.ValorTotal;
-        Ativo = registroAtualizado.Ativo;
+        Status = registroAtualizado.Status;
     }
 }
 

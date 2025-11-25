@@ -7,24 +7,32 @@ using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
+using AutoManeger.Dominio.ModuloFuncionario;
+using AutoManager.Dominio.Compartilhado;
 
 namespace AutoManager.Aplicacao.ModuloAutenticacao;
 
 public class AutenticacaoAppService
 {
-    private readonly AutoManagerDbContext dbContext;
+    private readonly IRepositorioEmpresa repositorioEmpresa;
+    private readonly IRepositorioFuncionario repositorioFuncionario;
+    private readonly IUnitOfWork unitOfWork;
     private readonly IHttpContextAccessor httpContextAccessor;
     private readonly ITenantProvider tenantProvider;
     private readonly IPasswordHasher passwordHasher;
 
     public AutenticacaoAppService(
-        AutoManagerDbContext dbContext,
+        IRepositorioEmpresa repositorioEmpresa,
+        IRepositorioFuncionario repositorioFuncionario,
+        IUnitOfWork unitOfWork,
         IHttpContextAccessor httpContextAccessor,
         ITenantProvider tenantProvider,
         IPasswordHasher passwordHasher  
     )
     {
-        this.dbContext = dbContext;
+        this.repositorioEmpresa = repositorioEmpresa;
+        this.repositorioFuncionario = repositorioFuncionario;
+        this.unitOfWork = unitOfWork;
         this.httpContextAccessor = httpContextAccessor;
         this.tenantProvider = tenantProvider;
         this.passwordHasher = passwordHasher;
@@ -32,25 +40,33 @@ public class AutenticacaoAppService
 
     public Result RegistrarEmpresa(string usuario, string email, string senhaPlana)
     {
-        if (dbContext.Empresas.IgnoreQueryFilters().Any(e => e.Email == email))
-            return Result.Fail(ErrorResults.RegistroDuplicado(
-                $"Já existe uma empresa com este e-mail: {email}"));
-
-        var aspNetUserId = Guid.NewGuid().ToString();
-
-        var empresa = new Empresa
+        try
         {
-            Id = Guid.NewGuid(),
-            Usuario = usuario,
-            Email = email,
-            SenhaHash = passwordHasher.SenhaHash(senhaPlana),
-            AspNetUserId = aspNetUserId
-        };
+            if (repositorioEmpresa.SelecionarTodos().Any(e => e.Email == email))
+                return Result.Fail(ErrorResults.RegistroDuplicado(
+                    $"Já existe uma empresa com este e-mail: {email}"));
 
-        dbContext.Empresas.Add(empresa);
-        dbContext.SaveChanges();
+            var aspNetUserId = Guid.NewGuid().ToString();
 
-        return Result.Ok("Empresa registrada com sucesso.");
+            var empresa = new Empresa
+            {
+                Id = Guid.NewGuid(),
+                Usuario = usuario,
+                Email = email,
+                SenhaHash = passwordHasher.SenhaHash(senhaPlana),
+                AspNetUserId = aspNetUserId
+            };
+
+            repositorioEmpresa.Inserir(empresa);
+            unitOfWork.Commit();
+
+            return Result.Ok("Empresa registrada com sucesso.");
+        }
+        catch (Exception ex) 
+        { 
+            unitOfWork.Rollback();
+            return Result.Fail(ErrorResults.ErroInterno($"Erro ao registrar empresa: {ex.Message}"));
+        }       
     }
 
     public Result RegistrarFuncionario(
@@ -61,40 +77,46 @@ public class AutenticacaoAppService
         Guid empresaId
     )
     {
-        var empresa = dbContext.Empresas.FirstOrDefault(e => e.Id == empresaId);
-        if (empresa == null)
-            return Result.Fail(ErrorResults.RegistroNaoEncontrado(empresaId));
+        try
+        {
+            var empresa = repositorioEmpresa.SelecionarPorId(empresaId);
+            if (empresa == null)
+                return Result.Fail(ErrorResults.RegistroNaoEncontrado(empresaId));
 
-        if (dbContext.Funcionarios.Any(f => f.Email == email && f.EmpresaId == empresaId))
-            return Result.Fail(ErrorResults.RegistroDuplicado($"Ja existe um funcionario com este email: {email} cadsatrado nesta empresa."));
+            if (repositorioFuncionario.SelecionarTodos().Any(f => f.Email == email && f.EmpresaId == empresaId))
+                return Result.Fail(ErrorResults.RegistroDuplicado($"Ja existe um funcionario com este e-mail: {email} cadsatrado nesta empresa."));
 
-        var aspNetUserId = Guid.NewGuid().ToString();
+            var aspNetUserId = Guid.NewGuid().ToString();
 
-        var funcionario = new Funcionario(
-            email,
-            passwordHasher.SenhaHash(senhaPlana),
-            dataAdmissao,
-            salario,
-            empresaId,
-            empresa,
-            estaAtivo: true,
-            aspNetUserId : Guid.NewGuid().ToString()
-        );
+            var funcionario = new Funcionario(
+                email,
+                passwordHasher.SenhaHash(senhaPlana),
+                dataAdmissao,
+                salario,
+                empresaId,
+                empresa,
+                estaAtivo: true,
+                aspNetUserId: aspNetUserId
+            );
 
-        dbContext.Funcionarios.Add(funcionario);
-        dbContext.SaveChanges();
+            repositorioFuncionario.Inserir(funcionario);
+            unitOfWork.Commit();
 
-        return Result.Ok("Funcionario registrado com sucesso.");
+            return Result.Ok("Funcionario registrado com sucesso.");
+        }
+        catch (Exception ex)
+        {
+            unitOfWork.Rollback();
+            return Result.Fail(ErrorResults.ErroInterno($"Erro ao registrar Funcionario : {ex.Message}"));
+        }
     }
 
     public async Task<Result> LoginAsync(string usuarioOuEmail, string senhaPlana)
     {
-        var empresa = dbContext.Empresas
-            .IgnoreQueryFilters()
+        var empresa = repositorioEmpresa.SelecionarTodos()
             .FirstOrDefault(e => e.Email == usuarioOuEmail || e.Usuario == usuarioOuEmail);
 
-        var funcionario = dbContext.Funcionarios
-            .IgnoreQueryFilters()
+        var funcionario = repositorioFuncionario.SelecionarTodos()
             .FirstOrDefault(f => f.Email == usuarioOuEmail);
 
         if (empresa == null && funcionario == null)

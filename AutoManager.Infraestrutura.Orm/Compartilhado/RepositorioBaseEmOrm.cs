@@ -29,7 +29,7 @@ public class RepositorioBaseEmOrm<T> : IRepositorio<T> where T : EntidadeBase<T>
         dbSet.Update(existente!);
     }
 
-    public void Excluir(Guid idRegistro)
+    public virtual void Excluir(Guid idRegistro)
     {
         var existente = SelecionarPorId(idRegistro);
         if (existente != null)

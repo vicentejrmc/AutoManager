@@ -29,4 +29,13 @@ public class RepositorioAluguelEmOrm : RepositorioBaseEmOrm<Aluguel>, IRepositor
             .Include(a => a.Taxas)
             .ToList();
     }
+
+    public override void Excluir(Guid id)
+    {
+        var aluguel = dbSet.FirstOrDefault(a => a.Id == id);
+        if (aluguel != null)
+        {
+            dbSet.Remove(aluguel);
+        }
+    }
 }

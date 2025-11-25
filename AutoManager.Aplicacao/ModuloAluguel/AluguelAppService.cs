@@ -2,8 +2,6 @@
 using AutoManager.Dominio.Compartilhado;
 using AutoManager.Dominio.ModuloAluguel;
 using AutoManager.Dominio.ModuloAutenticacao;
-using AutoManager.Infraestrutura.Orm.Compartilhado;
-using Microsoft.EntityFrameworkCore;
 
 namespace AutoManager.Aplicacao.ModuloAluguel
 {
@@ -18,7 +16,8 @@ namespace AutoManager.Aplicacao.ModuloAluguel
             IRepositorioAluguel repositorioAluguel,
             IUnitOfWork unitOfWork,
             ValidadorAluguel validador,
-            ITenantProvider tenantProvider)
+            ITenantProvider tenantProvider
+        )
         {
             this.repositorioAluguel = repositorioAluguel;
             this.unitOfWork = unitOfWork;
@@ -37,13 +36,21 @@ namespace AutoManager.Aplicacao.ModuloAluguel
                 return Result<Aluguel>.Fail(ErrorResults.RequisicaoInvalida("Empresa não identificada no contexto de login."));
 
             entidade.Id = Guid.NewGuid();
-            entidade.EmpresaId = empresaIdLogada.Value; //vínculo automático
-            entidade.Ativo = true;
+            entidade.EmpresaId = empresaIdLogada.Value;
+            entidade.Status = StatusAluguelEnum.EmAndamento;
 
-           repositorioAluguel.Inserir(entidade);
-            unitOfWork.Commit(); 
+            try
+            {
+                repositorioAluguel.Inserir(entidade);
+                unitOfWork.Commit();
 
-            return Result<Aluguel>.Ok(entidade, "Aluguel registrado com sucesso.");
+                return Result<Aluguel>.Ok(entidade, "Aluguel registrado com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.Rollback();
+                return Result<Aluguel>.Fail(ErrorResults.ErroInterno("Erro ao registrar aluguel"));
+            }
         }
 
         public Result<Aluguel> Editar(Aluguel entidade)
@@ -61,28 +68,45 @@ namespace AutoManager.Aplicacao.ModuloAluguel
                 return Result<Aluguel>.Fail(ErrorResults.RequisicaoInvalida("Empresa não identificada no contexto de login."));
 
             aluguel.AtualizarRegistro(entidade);
-            aluguel.EmpresaId = empresaIdLogada.Value; //reforço do vínculo
+            aluguel.EmpresaId = empresaIdLogada.Value;
 
-            repositorioAluguel.Editar(entidade.Id, aluguel);
-            unitOfWork.Commit();
+            try
+            {
+                repositorioAluguel.Editar(entidade.Id, aluguel);
+                unitOfWork.Commit();
 
-            return Result<Aluguel>.Ok(aluguel, "Aluguel atualizado com sucesso.");
+                return Result<Aluguel>.Ok(aluguel, "Aluguel atualizado com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.Rollback();
+                return Result<Aluguel>.Fail(ErrorResults.ErroInterno("Erro durante a edição do aluguel"));
+            }
         }
 
+        //Uso Exclusivo do Usuario Administrador 'Empresa'
         public Result Excluir(Guid id)
         {
             var aluguel = repositorioAluguel.SelecionarPorId(id);
             if (aluguel == null)
                 return Result.Fail(ErrorResults.RegistroNaoEncontrado(id));
 
-            if (!aluguel.Ativo)
-                return Result.Fail(ErrorResults.ExclusaoBloqueada("Aluguel já está inativo."));
+            var resultadoValidacao = validador.ValidarExclusao(aluguel);
+            if (resultadoValidacao.Falha)
+                return resultadoValidacao;
 
-            aluguel.Ativo = false; //desativar em vez de excluir fisicamente
-            repositorioAluguel.Excluir(aluguel.Id);
-            unitOfWork.Commit();
+            try
+            {
+                repositorioAluguel.Excluir(aluguel.Id);
+                unitOfWork.Commit();
 
-            return Result.Ok("Aluguel desativado com sucesso.");
+                return Result.Ok("Aluguel excluído com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.Rollback();
+                return Result.Fail(ErrorResults.ErroInterno("Erro ao excluir aluguel fisicamente."));
+            }
         }
 
         public Result<Aluguel> SelecionarPorId(Guid id)
@@ -98,6 +122,57 @@ namespace AutoManager.Aplicacao.ModuloAluguel
         public List<Aluguel> SelecionarTodos()
         {
             return repositorioAluguel.SelecionarTodos();
+        }
+
+        public Result<Aluguel> FinalizarAluguel(Guid id, DateTime dataDevolucao, decimal valorFinal)
+        {
+            var aluguel = repositorioAluguel.SelecionarPorId(id);
+            if (aluguel == null)
+                return Result<Aluguel>.Fail(ErrorResults.RegistroNaoEncontrado(id));
+
+            if (aluguel.Status != StatusAluguelEnum.EmAndamento)
+                return Result<Aluguel>.Fail(ErrorResults.RequisicaoInvalida("Aluguel não está em andamento."));
+
+            try
+            {
+                aluguel.DataDevolucao = dataDevolucao;
+                aluguel.ValorTotal = valorFinal;
+                aluguel.Status = StatusAluguelEnum.Finalizado;
+
+                repositorioAluguel.Editar(aluguel.Id, aluguel);
+                unitOfWork.Commit();
+
+                return Result<Aluguel>.Ok(aluguel, "Aluguel finalizado com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.Rollback();
+                return Result<Aluguel>.Fail(ErrorResults.ErroInterno("Erro ao finalizar aluguel."));
+            }
+        }
+
+        public Result<Aluguel> CancelarAluguel(Guid id)
+        {
+            var aluguel = repositorioAluguel.SelecionarPorId(id);
+            if (aluguel == null)
+                return Result<Aluguel>.Fail(ErrorResults.RegistroNaoEncontrado(id));
+
+            if (aluguel.Status != StatusAluguelEnum.EmAndamento)
+                return Result<Aluguel>.Fail(ErrorResults.RequisicaoInvalida("Somente aluguéis em andamento podem ser cancelados."));
+
+            try
+            {
+                aluguel.Status = StatusAluguelEnum.Cancelado;
+                repositorioAluguel.Editar(aluguel.Id, aluguel);
+                unitOfWork.Commit();
+
+                return Result<Aluguel>.Ok(aluguel, "Aluguel cancelado com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.Rollback();
+                return Result<Aluguel>.Fail(ErrorResults.ErroInterno("Erro ao cancelar aluguel."));
+            }
         }
     }
 }
