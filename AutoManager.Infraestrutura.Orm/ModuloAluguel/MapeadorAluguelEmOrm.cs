@@ -18,6 +18,9 @@ public class MapeadorAluguelEmOrm : IEntityTypeConfiguration<Aluguel>
         builder.Property(x => x.DataPrevistaRetorno)
             .IsRequired();
 
+        builder.Property(x => x.Ativo)
+            .IsRequired();
+
         builder.Property(x => x.DataDevolucao);
 
         builder.Property(x => x.ValorTotal)

@@ -33,7 +33,8 @@ public class AutenticacaoAppService
     public Result RegistrarEmpresa(string usuario, string email, string senhaPlana)
     {
         if (dbContext.Empresas.IgnoreQueryFilters().Any(e => e.Email == email))
-            return Result.Fail("Já existe uma empresa cadastrada com este e-mail.");
+            return Result.Fail(ErrorResults.RegistroDuplicado(
+                $"Já existe uma empresa com este e-mail: {email}"));
 
         var aspNetUserId = Guid.NewGuid().ToString();
 
@@ -77,7 +78,7 @@ public class AutenticacaoAppService
             empresaId,
             empresa,
             estaAtivo: true,
-            aspNetUserId
+            aspNetUserId : Guid.NewGuid().ToString()
         );
 
         dbContext.Funcionarios.Add(funcionario);
