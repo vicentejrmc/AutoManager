@@ -126,6 +126,12 @@ public class AutenticacaoAppService
         {
             if (!passwordHasher.VerificarSenhaHash(empresa.SenhaHash, senhaPlana))
                 return Result.Fail(ErrorResults.RequisicaoInvalida("Senha incorreta."));
+
+            if(empresa.Status ==  StatusEmpresaEnum.Inativa)
+                return Result.Fail(ErrorResults.RequisicaoInvalida("Empresa inativa. Contate o suporte"));
+
+            if(empresa.Status == StatusEmpresaEnum.PendenteExclusao)
+                return Result.Fail(ErrorResults.RequisicaoInvalida("Empresa com solicitação de exclusão pendente. Contate o Suporte"));
         }
         else if (funcionario != null)
         {
