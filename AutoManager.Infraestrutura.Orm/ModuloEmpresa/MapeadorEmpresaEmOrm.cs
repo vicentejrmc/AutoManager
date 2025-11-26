@@ -28,6 +28,10 @@ public class MapeadorEmpresaEmOrm : IEntityTypeConfiguration<Empresa>
             .HasMaxLength(100)
             .IsRequired();
 
+        builder.Property(x => x.Status)
+            .HasConversion<int>()
+            .IsRequired();
+
         // Relacionamentos
         builder.HasMany(e => e.Funcionarios)
             .WithOne(f => f.Empresa)

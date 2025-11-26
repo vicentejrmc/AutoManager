@@ -1,22 +1,29 @@
 ﻿using AutoManager.Aplicacao.Compartilhado;
+using AutoManager.Dominio.Compartilhado;
+using AutoManager.Dominio.ModuloAluguel;
+using AutoManager.Dominio.ModuloAutenticacao;
 using AutoManager.Dominio.ModuloEmpresa;
-using AutoManager.Infraestrutura.Orm.Compartilhado;
-using Microsoft.EntityFrameworkCore;
 
 namespace AutoManager.Aplicacao.ModuloEmpresa
 {
     public class EmpresaAppService : IAppService<Empresa>
     {
-        private readonly AutoManagerDbContext dbContext;
+        private readonly IUnitOfWork unitOfWork;
+        private readonly ITenantProvider tenantProvider;
+        private readonly IRepositorioEmpresa repositorioEmpresa;
         private readonly IPasswordHasher passwordHasher;
         private readonly ValidadorEmpresa validador;
 
         public EmpresaAppService(
-            AutoManagerDbContext dbContext,
+            IUnitOfWork unitOfWork,
+            ITenantProvider tenantProvider,
+            IRepositorioEmpresa repositorioEmpresa,
             IPasswordHasher passwordHasher,
             ValidadorEmpresa validador)
         {
-            this.dbContext = dbContext;
+            this.unitOfWork = unitOfWork;
+            this.tenantProvider = tenantProvider;
+            this.repositorioEmpresa = repositorioEmpresa;
             this.passwordHasher = passwordHasher;
             this.validador = validador;
         }
@@ -27,22 +34,33 @@ namespace AutoManager.Aplicacao.ModuloEmpresa
             if (resultadoValidacao.Falha)
                 return Result<Empresa>.Fail(resultadoValidacao.Mensagem);
 
-            if (dbContext.Empresas.Any(e => e.Email == entidade.Email))
+            var empresa = repositorioEmpresa.SelecionarTodos();
+            if (empresa.Any(e => e.Email == entidade.Email))
                 return Result<Empresa>.Fail(ErrorResults.RegistroDuplicado($"Empresa com e-mail {entidade.Email}"));
 
             entidade.Id = Guid.NewGuid();
             entidade.SenhaHash = passwordHasher.SenhaHash(entidade.SenhaHash);
             entidade.AspNetUserId = Guid.NewGuid().ToString();
 
-            dbContext.Empresas.Add(entidade);
-            dbContext.SaveChanges();
+            try
+            {
+                repositorioEmpresa.Inserir(entidade);
+                unitOfWork.Commit();
 
-            return Result<Empresa>.Ok(entidade, "Empresa registrada com sucesso.");
+                return Result<Empresa>.Ok(entidade, "Empresa registrada com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.Rollback();
+                return Result<Empresa>.Fail(ErrorResults.ErroInterno("Erro ao inserir empresa"));
+            }
+
+
         }
 
         public Result<Empresa> Editar(Empresa entidade)
         {
-            var empresa = dbContext.Empresas.FirstOrDefault(e => e.Id == entidade.Id);
+            var empresa = repositorioEmpresa.SelecionarPorId(entidade.Id);
             if (empresa == null)
                 return Result<Empresa>.Fail(ErrorResults.RegistroNaoEncontrado(entidade.Id));
 
@@ -50,41 +68,76 @@ namespace AutoManager.Aplicacao.ModuloEmpresa
             if (resultadoValidacao.Falha)
                 return Result<Empresa>.Fail(resultadoValidacao.Mensagem);
 
+            var empresas = repositorioEmpresa.SelecionarTodos();
+            if (empresas.Any(e => e.Email == entidade.Email && e.Id != entidade.Id))
+                return Result<Empresa>.Fail(ErrorResults.RegistroDuplicado("Empresa com e-mail já cadastrado."));
+
             empresa.AtualizarRegistro(entidade);
 
             if (!string.IsNullOrWhiteSpace(entidade.SenhaHash))
                 empresa.SenhaHash = passwordHasher.SenhaHash(entidade.SenhaHash);
 
-            dbContext.Empresas.Update(empresa);
-            dbContext.SaveChanges();
+            try
+            {
+                repositorioEmpresa.Editar(entidade.Id, empresa);
+                unitOfWork.Commit();
 
-            return Result<Empresa>.Ok(empresa, "Empresa atualizada com sucesso.");
+                return Result<Empresa>.Ok(empresa, "Empresa atualizada com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.Rollback();
+                return Result<Empresa>.Fail(ErrorResults.ErroInterno("Erro ao editar empresa"));
+            }
         }
 
+        //Método de exclusão que não requer autenticação adicional Não deve ser chamado diretamente em produção pelo front-end
         public Result Excluir(Guid id)
         {
-            var empresa = dbContext.Empresas
-                .Include(e => e.Alugueis)
-                .FirstOrDefault(e => e.Id == id);
+            //Método lançado como exigencia da Inteface, chama o método de SolicitarExcluso 
+            //No front-end deve ser chamado o método SolicitarExclusao que exige email e senha para maior segurança.
+            return SolicitarExclusao(id, string.Empty, string.Empty);
+        }
 
+        public Result SolicitarExclusao(Guid id, string email, string senha)
+        {
+            if(!tenantProvider.IsInRole("Empresa"))
+                return Result.Fail(ErrorResults.RequisicaoInvalida("Somente usuários Empresa podem solicitar exclusão"));
+
+            var empresaIdLogada = tenantProvider.EmpresaId;
+            if(empresaIdLogada == null || empresaIdLogada.Value != id)
+                return Result.Fail(ErrorResults.RequisicaoInvalida("A Empresa Logada só pode solitar a exclusão de si mesma."));
+
+            var empresa = repositorioEmpresa.SelecionarPorId(id);
             if (empresa == null)
                 return Result.Fail(ErrorResults.RegistroNaoEncontrado(id));
 
-            if (empresa.Alugueis.Any(a => a.Ativo))
+            if(empresa.Email != email || !passwordHasher.VerificarSenhaHash(senha, empresa.SenhaHash))
+                return Result.Fail(ErrorResults.RequisicaoInvalida("Email ou senha inválidos para solicitação de exclusão da empresa."));
+
+            if (empresa.Alugueis.Any(a => a.Status == StatusAluguelEnum.EmAndamento))
                 return Result.Fail(ErrorResults.ExclusaoBloqueada("Empresa possui aluguéis ativos."));
 
-            dbContext.Empresas.Remove(empresa);
-            dbContext.SaveChanges();
+            try
+            {
+                empresa.Status = StatusEmpresaEnum.PendenteExclusao;
+                repositorioEmpresa.Editar(empresa.Id, empresa);
+                unitOfWork.Commit();
 
-            return Result.Ok("Empresa removida com sucesso.");
+                //Implementar envio de e-mail para o suporte solicitando a exclusão definitiva da empresa aqui.    
+
+                return Result.Ok("Empresa desativada. Um e-mail foi enviado ao suporte para exclusão definitiva.");
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.Rollback();
+                return Result.Fail(ErrorResults.ErroInterno("Erro ao processar solicitação de exclusão."));
+            }
         }
 
         public Result<Empresa> SelecionarPorId(Guid id)
         {
-            var empresa = dbContext.Empresas
-                .Include(e => e.Funcionarios)
-                .Include(e => e.Clientes)
-                .FirstOrDefault(e => e.Id == id);
+            var empresa = repositorioEmpresa.SelecionarPorId(id);
 
             if (empresa == null)
                 return Result<Empresa>.Fail(ErrorResults.RegistroNaoEncontrado(id));
@@ -94,10 +147,8 @@ namespace AutoManager.Aplicacao.ModuloEmpresa
 
         public List<Empresa> SelecionarTodos()
         {
-            return dbContext.Empresas
-                .Include(e => e.Funcionarios)
-                .Include(e => e.Automoveis)
-                .ToList();
+            return repositorioEmpresa.SelecionarTodos();
         }
+
     }
 }

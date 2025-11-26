@@ -19,6 +19,7 @@ public class MapeadorAluguelEmOrm : IEntityTypeConfiguration<Aluguel>
             .IsRequired();
         
         builder.Property(x => x.Status)
+            .HasConversion<int>()
             .IsRequired();
 
         builder.Property(x => x.DataDevolucao);

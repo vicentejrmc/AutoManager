@@ -26,6 +26,9 @@ public class Empresa : EntidadeBase<Empresa>
     public ICollection<PlanoCobranca> PlanosCobranca { get; set; } = new List<PlanoCobranca>();
     public ICollection<PrecoCombustivel> PrecoCombustiveis { get; set; } = new List<PrecoCombustivel>();
     public ICollection<TaxaServico> TaxasServico { get; set; } = new List<TaxaServico>();
+    public StatusEmpresaEnum Status { get; set; } = StatusEmpresaEnum.Ativa;
+
+
 
     public Empresa() {}
 
@@ -42,7 +45,8 @@ public class Empresa : EntidadeBase<Empresa>
         ICollection<GrupoAutomovel> gruposAutomoveis,
         ICollection<PlanoCobranca> planosCobranca,
         ICollection<PrecoCombustivel> precoCombustiveis,
-        ICollection<TaxaServico> taxasServico
+        ICollection<TaxaServico> taxasServico,
+        StatusEmpresaEnum status
     )
     {
         Usuario = usuario;
@@ -58,6 +62,7 @@ public class Empresa : EntidadeBase<Empresa>
         PlanosCobranca = planosCobranca;
         PrecoCombustiveis = precoCombustiveis;
         TaxasServico = taxasServico;
+        Status = status;
     }
 
     public override void AtualizarRegistro(Empresa registroAtualizado)
