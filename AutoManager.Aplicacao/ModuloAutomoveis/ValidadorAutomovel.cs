@@ -3,9 +3,9 @@ using AutoManager.Dominio.ModuloAutomoveis;
 
 namespace AutoManager.Aplicacao.ModuloAutomoveis
 {
-    public class ValidadorAutomovel
+    public class ValidadorAutomovel : ValidadorBase<Automovel>
     {
-        public virtual Result<Automovel> Validar(Automovel automovel)
+        public override Result<Automovel> Validar(Automovel automovel)
         {
             if (string.IsNullOrWhiteSpace(automovel.Placa))
                 return Result<Automovel>.Fail(ErrorResults.RequisicaoInvalida("Placa do automóvel é obrigatória."));
