@@ -102,8 +102,6 @@ namespace AutoManager.Aplicacao.ModuloFuncionario
                 unitOfWork.Rollback();
                 return Result<Funcionario>.Fail(ErrorResults.ErroInterno($"Erro ao editar o funcionário: {ex.Message}"));
             }
-
-
         }
 
         public Result Excluir(Guid id)

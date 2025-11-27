@@ -80,6 +80,9 @@ namespace AutoManager.Aplicacao.ModuloCliente
             if (empresaIdLogada == null)
                 return Result<Cliente>.Fail(ErrorResults.PermissaoNegada("Empresa não identificada."));
 
+            if (cliente.EmpresaId != empresaIdLogada.Value)
+                return Result<Cliente>.Fail(ErrorResults.PermissaoNegada("Não é possível editar clientes de outra empresa."));
+
             var empresa = repositorioEmpresa.SelecionarPorId(empresaIdLogada.Value);
             if (empresa == null)
                 return Result<Cliente>.Fail(ErrorResults.RegistroNaoEncontrado(empresaIdLogada.Value));

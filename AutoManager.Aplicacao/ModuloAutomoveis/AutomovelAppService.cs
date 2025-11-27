@@ -3,6 +3,7 @@ using AutoManager.Dominio.Compartilhado;
 using AutoManager.Dominio.ModuloAluguel;
 using AutoManager.Dominio.ModuloAutenticacao;
 using AutoManager.Dominio.ModuloAutomoveis;
+using AutoManager.Dominio.ModuloCondutor;
 using AutoManager.Dominio.ModuloEmpresa;
 using AutoManager.Dominio.ModuloGrupoAutomovel;
 
@@ -72,21 +73,31 @@ public class AutomovelAppService : IAppService<Automovel>
 
     public Result<Automovel> Editar(Automovel entidade)
     {
+        if (!tenantProvider.IsInRole("Empresa") && !tenantProvider.IsInRole("Funcionario"))
+            return Result<Automovel>.Fail(ErrorResults.PermissaoNegada("Somente Empresa ou Funcionário podem editar automóveis."));
+
         var automovel = repositorioAutomovel.SelecionarPorId(entidade.Id);
         if (automovel == null)
             return Result<Automovel>.Fail(ErrorResults.RegistroNaoEncontrado(entidade.Id));
 
-        var resultadoValidacao = validadorAutomovel.Validar(entidade);
-        if (resultadoValidacao.Falha)
-            return Result<Automovel>.Fail(resultadoValidacao.Mensagem);
+        var empresaIdLogada = tenantProvider.EmpresaId;
+        if (empresaIdLogada == null)
+            return Result<Automovel>.Fail(ErrorResults.PermissaoNegada("Empresa não identificada."));
 
-        var empresa = repositorioEmpresa.SelecionarPorId(entidade.EmpresaId);
+        if (automovel.EmpresaId != empresaIdLogada.Value)
+            return Result<Automovel>.Fail(ErrorResults.PermissaoNegada("Não é possível editar automóveis de outra empresa."));
+
+        var empresa = repositorioEmpresa.SelecionarPorId(empresaIdLogada.Value);
         if (empresa == null)
-            return Result<Automovel>.Fail(ErrorResults.RegistroNaoEncontrado(entidade.EmpresaId));
+            return Result<Automovel>.Fail(ErrorResults.RegistroNaoEncontrado(empresaIdLogada.Value));
 
         var grupo = repositorioGrupoAutomovel.SelecionarPorId(entidade.GrupoAutomovelId);
         if (grupo == null)
             return Result<Automovel>.Fail(ErrorResults.RegistroNaoEncontrado(entidade.GrupoAutomovelId));
+
+        var resultadoValidacao = validadorAutomovel.Validar(entidade);
+        if (resultadoValidacao.Falha)
+            return Result<Automovel>.Fail(resultadoValidacao.Mensagem);
 
         try
         {
@@ -105,6 +116,7 @@ public class AutomovelAppService : IAppService<Automovel>
             return Result<Automovel>.Fail(ErrorResults.ErroInterno($"Erro ao editar automóvel: {ex.Message}"));
         }
     }
+
 
     public Result Excluir(Guid id)
     {
@@ -139,7 +151,10 @@ public class AutomovelAppService : IAppService<Automovel>
 
     public Result<Automovel> SelecionarPorId(Guid id)
     {
-       var automovel = repositorioAutomovel.SelecionarPorId(id);
+        if (!tenantProvider.IsInRole("Empresa") && !tenantProvider.IsInRole("Funcionario"))
+            return Result<Automovel>.Fail(ErrorResults.PermissaoNegada("Somente Empresa ou Funcionário podem consultar automóveis."));
+
+        var automovel = repositorioAutomovel.SelecionarPorId(id);
         if(automovel == null)
             return Result<Automovel>.Fail(ErrorResults.RegistroNaoEncontrado(id));
         
@@ -148,6 +163,9 @@ public class AutomovelAppService : IAppService<Automovel>
 
     public List<Automovel> SelecionarTodos()
     {
+        if (!tenantProvider.IsInRole("Empresa") && !tenantProvider.IsInRole("Funcionario"))
+            return new List<Automovel>();
+
         return repositorioAutomovel.SelecionarTodos();
     }
 }
