@@ -66,7 +66,6 @@ public class Automovel : EntidadeBase<Automovel>
         FotoUrl = registroAtualizado.FotoUrl;
         GrupoAutomovelId = registroAtualizado.GrupoAutomovelId;
         EmpresaId = registroAtualizado.EmpresaId;
-        Empresa = registroAtualizado.Empresa;
         Alugueis = registroAtualizado.Alugueis;
 
     }

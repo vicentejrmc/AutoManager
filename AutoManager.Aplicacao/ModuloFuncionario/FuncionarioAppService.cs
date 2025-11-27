@@ -62,6 +62,7 @@ namespace AutoManager.Aplicacao.ModuloFuncionario
             }
             catch (Exception ex)
             {
+                unitOfWork.Rollback();
                 return Result<Funcionario>.Fail(ErrorResults.ErroInterno($"Erro ao inserir o funcionário: {ex.Message}"));
             }
 
@@ -98,6 +99,7 @@ namespace AutoManager.Aplicacao.ModuloFuncionario
             }
             catch (Exception ex)
             {
+                unitOfWork.Rollback();
                 return Result<Funcionario>.Fail(ErrorResults.ErroInterno($"Erro ao editar o funcionário: {ex.Message}"));
             }
 
@@ -135,6 +137,7 @@ namespace AutoManager.Aplicacao.ModuloFuncionario
             }
             catch (Exception ex)
             {
+                unitOfWork.Rollback();
                 return Result.Fail(ErrorResults.ErroInterno($"Erro ao excluir o funcionário: {ex.Message}"));
             }
         }
