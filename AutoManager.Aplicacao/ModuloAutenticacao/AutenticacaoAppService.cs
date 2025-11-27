@@ -2,11 +2,9 @@
 using AutoManager.Dominio.ModuloAutenticacao;
 using AutoManager.Dominio.ModuloEmpresa;
 using AutoManager.Dominio.ModuloFuncionario;
-using AutoManager.Infraestrutura.Orm.Compartilhado;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.EntityFrameworkCore;
 using AutoManeger.Dominio.ModuloFuncionario;
 using AutoManager.Dominio.Compartilhado;
 

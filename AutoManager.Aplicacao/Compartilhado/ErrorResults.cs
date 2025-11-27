@@ -16,4 +16,8 @@ public static class ErrorResults
 
     public static string ErroInterno(string mensagem) =>
         $"Erro interno no servidor: {mensagem}";
+
+    public static string PermissaoNegada(string mensagem) =>
+        $"Acesso negado: {mensagem}";
+
 }
