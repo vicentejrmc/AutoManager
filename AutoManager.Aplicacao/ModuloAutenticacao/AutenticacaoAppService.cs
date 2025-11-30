@@ -5,7 +5,7 @@ using AutoManager.Dominio.ModuloFuncionario;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
-using AutoManeger.Dominio.ModuloFuncionario;
+using AutoManager.Dominio.ModuloFuncionario;
 using AutoManager.Dominio.Compartilhado;
 
 namespace AutoManager.Aplicacao.ModuloAutenticacao;
@@ -41,8 +41,7 @@ public class AutenticacaoAppService
         try
         {
             if (repositorioEmpresa.SelecionarTodos().Any(e => e.Email == email))
-                return Result.Fail(ErrorResults.RegistroDuplicado(
-                    $"Já existe uma empresa com este e-mail: {email}"));
+                return Result.Fail(ErrorResults.RegistroDuplicado($"Já existe uma empresa com este e-mail: {email}"));
 
             var aspNetUserId = Guid.NewGuid().ToString();
 
@@ -118,7 +117,7 @@ public class AutenticacaoAppService
             .FirstOrDefault(f => f.Email == usuarioOuEmail);
 
         if (empresa == null && funcionario == null)
-            return Result.Fail($"Usuário {usuarioOuEmail} não foi encontrado.");
+            return Result.Fail(ErrorResults.RequisicaoInvalida("Usuário ou e-mail não encontrado."));
 
         if (empresa != null)
         {

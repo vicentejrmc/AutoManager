@@ -39,9 +39,6 @@ namespace AutoManager.Aplicacao.ModuloCliente
             if (empresaIdLogada == null)
                 return Result<Cliente>.Fail(ErrorResults.PermissaoNegada("Empresa não identificada."));
 
-            if (!tenantProvider.IsInRole("Empresa") && !tenantProvider.IsInRole("Funcionario"))
-                return Result<Cliente>.Fail(ErrorResults.PermissaoNegada("Somente Empresa ou Funcionário podem cadastrar clientes."));
-
             var empresa = repositorioEmpresa.SelecionarPorId(empresaIdLogada.Value);
             if (empresa == null)
                 return Result<Cliente>.Fail(ErrorResults.RegistroNaoEncontrado(empresaIdLogada.Value));
@@ -51,7 +48,7 @@ namespace AutoManager.Aplicacao.ModuloCliente
 
             var resultadoValidacao = validadorCliente.Validar(entidade);
             if (resultadoValidacao.Falha)
-                return Result<Cliente>.Fail(resultadoValidacao.Mensagem);
+                return Result<Cliente>.Fail(ErrorResults.RequisicaoInvalida(resultadoValidacao.Mensagem));
 
             try
             {
@@ -150,12 +147,13 @@ namespace AutoManager.Aplicacao.ModuloCliente
             return Result<Cliente>.Ok(cliente);
         }
 
-        public List<Cliente> SelecionarTodos()
+        public Result<List<Cliente>> SelecionarTodos()
         {
             if (!tenantProvider.IsInRole("Empresa") && !tenantProvider.IsInRole("Funcionario"))
-                return new List<Cliente>();
+                return Result<List<Cliente>>.Fail(ErrorResults.PermissaoNegada("Somente Empresa ou Funcionário podem consultar clientes."));
 
-            return repositorioCliente.SelecionarTodos();
+            var clientes = repositorioCliente.SelecionarTodos();
+            return Result<List<Cliente>>.Ok(clientes);
         }
     }
 }

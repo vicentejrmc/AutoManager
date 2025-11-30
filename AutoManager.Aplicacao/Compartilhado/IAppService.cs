@@ -6,5 +6,5 @@ public interface IAppService<T>
     Result<T> Editar(T entidade);
     Result Excluir(Guid id);
     Result<T> SelecionarPorId(Guid id);
-    List<T> SelecionarTodos();
+    Result<List<T>> SelecionarTodos();
 }

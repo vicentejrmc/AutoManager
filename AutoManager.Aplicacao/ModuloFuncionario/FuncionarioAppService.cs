@@ -3,8 +3,6 @@ using AutoManager.Dominio.Compartilhado;
 using AutoManager.Dominio.ModuloAutenticacao;
 using AutoManager.Dominio.ModuloEmpresa;
 using AutoManager.Dominio.ModuloFuncionario;
-using AutoManeger.Dominio.ModuloFuncionario;
-using Microsoft.EntityFrameworkCore;
 
 namespace AutoManager.Aplicacao.ModuloFuncionario
 {
@@ -37,7 +35,7 @@ namespace AutoManager.Aplicacao.ModuloFuncionario
         {
             var resultadoValidacao = validador.Validar(entidade);
             if (resultadoValidacao.Falha)
-                return Result<Funcionario>.Fail(resultadoValidacao.Mensagem);
+                return Result<Funcionario>.Fail(ErrorResults.RequisicaoInvalida(resultadoValidacao.Mensagem));
 
             var empresa = repositorioEmpresa.SelecionarPorId(entidade.EmpresaId);
             if (empresa == null)
@@ -77,7 +75,7 @@ namespace AutoManager.Aplicacao.ModuloFuncionario
 
             var resultadoValidacao = validador.Validar(entidade);
             if (resultadoValidacao.Falha)
-                return Result<Funcionario>.Fail(resultadoValidacao.Mensagem);
+                return Result<Funcionario>.Fail(ErrorResults.RequisicaoInvalida(resultadoValidacao.Mensagem));
 
             var empresa = repositorioEmpresa.SelecionarPorId(entidade.EmpresaId);
             if (empresa == null)
@@ -111,23 +109,18 @@ namespace AutoManager.Aplicacao.ModuloFuncionario
                 return Result.Fail(ErrorResults.RegistroNaoEncontrado(id));
 
             if (!tenantProvider.IsInRole("Empresa"))
-                return Result.Fail(ErrorResults.RequisicaoInvalida("Apenas usuários do tipo Empresa podem excluir funcionários."));
+                return Result.Fail(ErrorResults.PermissaoNegada("Apenas usuários do tipo Empresa podem excluir funcionários."));
 
             var empresaIdLogada = tenantProvider.EmpresaId;
-
             if (empresaIdLogada == null)
-                return Result.Fail(ErrorResults.RequisicaoInvalida("Empresa logada inválida."));
+                return Result.Fail(ErrorResults.PermissaoNegada("Empresa logada inválida."));
 
             // Verifica se o funcionário pertence à empresa do usuário logado em caso de vazamento de dados.(Se isso acontecer, lascou-se!)
-            if (funcionario.EmpresaId != empresaIdLogada)
-                return Result.Fail(ErrorResults.RequisicaoInvalida("Não é possível excluir funcionários de outra empresa."));
-
-            if (!funcionario.EstaAtivo)
-                return Result.Fail(ErrorResults.ExclusaoBloqueada("Funcionário já está inativo."));
+            if (funcionario.EmpresaId != empresaIdLogada.Value)
+                return Result.Fail(ErrorResults.PermissaoNegada("Não é possível excluir funcionários de outra empresa."));
 
             try
             {
-                funcionario.EstaAtivo = false;
                 repositorioFuncionario.Excluir(funcionario.Id);
                 unitOfWork.Commit();
 
@@ -150,13 +143,14 @@ namespace AutoManager.Aplicacao.ModuloFuncionario
             return Result<Funcionario>.Ok(funcionario);
         }
 
-        public List<Funcionario> SelecionarTodos()
+        public Result<List<Funcionario>> SelecionarTodos()
         {
-            return repositorioFuncionario.SelecionarTodos();
+            var lista = repositorioFuncionario.SelecionarTodos();
+            return Result<List<Funcionario>>.Ok(lista);
         }
 
 
-        // Auxiliares para uso interno da Empresa em caso de apenas desativação/bloqueio do funcionário
+        // Auxiliares. apenas desativação/bloqueio do funcionário
 
         public Result AtivarFuncionario(Guid id)
         {
@@ -168,7 +162,7 @@ namespace AutoManager.Aplicacao.ModuloFuncionario
             return AlterarStatusFuncionario(id, false);
         }
 
-        public Result AlterarStatusFuncionario(Guid id, bool ativar)
+        public Result AlterarStatusFuncionario(Guid id, bool status)
         {
             if (!tenantProvider.IsInRole("Empresa"))
                 return Result.Fail(ErrorResults.PermissaoNegada("Somente usuários do tipo Empresa podem alterar o status de funcionários."));
@@ -182,20 +176,21 @@ namespace AutoManager.Aplicacao.ModuloFuncionario
                 return Result.Fail(ErrorResults.RegistroNaoEncontrado(id));
 
             if (funcionario.EmpresaId != empresaIdLogada.Value)
-                return Result.Fail(ErrorResults.PermissaoNegada("Não é possível desativar funcionários de outra empresa."));
+                return Result.Fail(ErrorResults.PermissaoNegada("Não é possível alterar status de funcionários de outra empresa."));
 
-            if(ativar && funcionario.EstaAtivo)
+            if(status && funcionario.EstaAtivo)
                 return Result.Fail(ErrorResults.RequisicaoInvalida("Funcionário já está ativo."));
-            if(!ativar && !funcionario.EstaAtivo)
+            
+            if(!status && !funcionario.EstaAtivo)
                 return Result.Fail(ErrorResults.RequisicaoInvalida("Funcionário já está inativo."));
 
             try
             {
-                funcionario.EstaAtivo = false;
+                funcionario.EstaAtivo = status;
                 repositorioFuncionario.Editar(id, funcionario); // apenas atualização
                 unitOfWork.Commit();
 
-                var mensagem = ativar ? "Funcionário ativado com sucesso." : "Funcionário desativado com sucesso.";
+                var mensagem = status ? "Funcionário ativado com sucesso." : "Funcionário desativado com sucesso.";
 
                 return Result.Ok(mensagem);
             }

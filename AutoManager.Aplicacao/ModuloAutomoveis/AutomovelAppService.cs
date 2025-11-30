@@ -44,16 +44,21 @@ public class AutomovelAppService : IAppService<Automovel>
         if(resultValidacao.Falha)
             return Result<Automovel>.Fail(ErrorResults.RequisicaoInvalida(resultValidacao.Mensagem));
 
-        var empresa = repositorioEmpresa.SelecionarPorId(entidade.EmpresaId);
+        var empresaIdLogada = tenantProvider.EmpresaId;
+        if (empresaIdLogada == null)
+            return Result<Automovel>.Fail(ErrorResults.PermissaoNegada("Empresa não identificada."));
+
+        var empresa = repositorioEmpresa.SelecionarPorId(empresaIdLogada.Value);
         if(empresa == null)
-            return Result<Automovel>.Fail(ErrorResults.RegistroNaoEncontrado(entidade.EmpresaId));
+            return Result<Automovel>.Fail(ErrorResults.RegistroNaoEncontrado(empresaIdLogada.Value));
 
         var grupoAutomovel = repositorioGrupoAutomovel.SelecionarPorId(entidade.GrupoAutomovelId);
-        if(grupoAutomovel == null || grupoAutomovel.EmpresaId != entidade.EmpresaId)
+        if(grupoAutomovel == null || grupoAutomovel.EmpresaId != empresaIdLogada.Value)
             return Result<Automovel>.Fail(ErrorResults.RegistroNaoEncontrado(entidade.GrupoAutomovelId));
 
         try
         {
+            entidade.EmpresaId = empresaIdLogada.Value;
             entidade.Empresa = empresa;
             entidade.GrupoAutomovel = grupoAutomovel;
 
@@ -97,7 +102,7 @@ public class AutomovelAppService : IAppService<Automovel>
 
         var resultadoValidacao = validadorAutomovel.Validar(entidade);
         if (resultadoValidacao.Falha)
-            return Result<Automovel>.Fail(resultadoValidacao.Mensagem);
+            return Result<Automovel>.Fail(ErrorResults.RequisicaoInvalida(resultadoValidacao.Mensagem));
 
         try
         {
@@ -161,11 +166,12 @@ public class AutomovelAppService : IAppService<Automovel>
         return Result<Automovel>.Ok(automovel);
     }
 
-    public List<Automovel> SelecionarTodos()
+    public Result<List<Automovel>> SelecionarTodos()
     {
         if (!tenantProvider.IsInRole("Empresa") && !tenantProvider.IsInRole("Funcionario"))
-            return new List<Automovel>();
+            return Result<List<Automovel>>.Fail(ErrorResults.PermissaoNegada("Somente Empresa ou Funcionário podem consultar automóveis."));
 
-        return repositorioAutomovel.SelecionarTodos();
+        var automoveis = repositorioAutomovel.SelecionarTodos();
+        return Result<List<Automovel>>.Ok(automoveis);
     }
 }

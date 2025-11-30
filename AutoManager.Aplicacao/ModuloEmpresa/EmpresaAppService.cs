@@ -32,7 +32,8 @@ namespace AutoManager.Aplicacao.ModuloEmpresa
         {
             var resultadoValidacao = validador.Validar(entidade);
             if (resultadoValidacao.Falha)
-                return Result<Empresa>.Fail(resultadoValidacao.Mensagem);
+                return Result<Empresa>.Fail(ErrorResults.RequisicaoInvalida(resultadoValidacao.Mensagem));
+
 
             var empresa = repositorioEmpresa.SelecionarTodos();
             if (empresa.Any(e => e.Email == entidade.Email))
@@ -52,7 +53,7 @@ namespace AutoManager.Aplicacao.ModuloEmpresa
             catch (Exception ex)
             {
                 unitOfWork.Rollback();
-                return Result<Empresa>.Fail(ErrorResults.ErroInterno("Erro ao inserir empresa"));
+                return Result<Empresa>.Fail(ErrorResults.ErroInterno($"Erro ao inserir empresa: {ex.Message}"));
             }
 
 
@@ -66,7 +67,8 @@ namespace AutoManager.Aplicacao.ModuloEmpresa
 
             var resultadoValidacao = validador.Validar(entidade);
             if (resultadoValidacao.Falha)
-                return Result<Empresa>.Fail(resultadoValidacao.Mensagem);
+                return Result<Empresa>.Fail(ErrorResults.RequisicaoInvalida(resultadoValidacao.Mensagem));
+
 
             var empresas = repositorioEmpresa.SelecionarTodos();
             if (empresas.Any(e => e.Email == entidade.Email && e.Id != entidade.Id))
@@ -87,15 +89,15 @@ namespace AutoManager.Aplicacao.ModuloEmpresa
             catch (Exception ex)
             {
                 unitOfWork.Rollback();
-                return Result<Empresa>.Fail(ErrorResults.ErroInterno("Erro ao editar empresa"));
+                return Result<Empresa>.Fail(ErrorResults.ErroInterno($"Erro ao editar empresa: {ex.Message}"));
             }
         }
 
-        //Método de exclusão que não requer autenticação adicional Não deve ser chamado diretamente em produção pelo front-end
+
+        // Método de exclusão que não deve ser chamado diretamente em produção. A exclusão deve ser solicitada via SolicitarExclusao.
         public Result Excluir(Guid id)
         {
-            //Método lançado como exigencia da Inteface, chama o método de SolicitarExcluso 
-            //No front-end deve ser chamado o método SolicitarExclusao que exige email e senha para maior segurança.
+            // Apenas cumpre a interface, mas delega para SolicitarExclusao
             return SolicitarExclusao(id, string.Empty, string.Empty);
         }
 
@@ -131,7 +133,7 @@ namespace AutoManager.Aplicacao.ModuloEmpresa
             catch (Exception ex)
             {
                 unitOfWork.Rollback();
-                return Result.Fail(ErrorResults.ErroInterno("Erro ao processar solicitação de exclusão."));
+                return Result.Fail(ErrorResults.ErroInterno($"Erro ao processar solicitação de exclusão: {ex.Message}"));
             }
         }
 
@@ -145,9 +147,18 @@ namespace AutoManager.Aplicacao.ModuloEmpresa
             return Result<Empresa>.Ok(empresa);
         }
 
-        public List<Empresa> SelecionarTodos()
+        public Result<List<Empresa>> SelecionarTodos()
         {
-            return repositorioEmpresa.SelecionarTodos();
+            // Retorna apenas a empresa do tenant logado
+            var empresaIdLogada = tenantProvider.EmpresaId;
+            if (empresaIdLogada == null)
+                return Result<List<Empresa>>.Fail(ErrorResults.PermissaoNegada("Empresa não identificada."));
+
+            var empresa = repositorioEmpresa.SelecionarPorId(empresaIdLogada.Value);
+            if (empresa == null)
+                return Result<List<Empresa>>.Fail(ErrorResults.RegistroNaoEncontrado(empresaIdLogada.Value));
+
+            return Result<List<Empresa>>.Ok(new List<Empresa> { empresa });
         }
 
     }

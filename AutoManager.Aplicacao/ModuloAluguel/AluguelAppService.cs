@@ -27,9 +27,13 @@ namespace AutoManager.Aplicacao.ModuloAluguel
 
         public Result<Aluguel> Inserir(Aluguel entidade)
         {
+
+            if (!tenantProvider.IsInRole("Empresa") && !tenantProvider.IsInRole("Funcionario"))
+                return Result<Aluguel>.Fail(ErrorResults.PermissaoNegada("Somente Empresa ou Funcionário podem cadastrar aluguéis."));
+
             var resultadoValidacao = validador.Validar(entidade);
             if (resultadoValidacao.Falha)
-                return Result<Aluguel>.Fail(resultadoValidacao.Mensagem);
+                return Result<Aluguel>.Fail(ErrorResults.RequisicaoInvalida(resultadoValidacao.Mensagem));
 
             var empresaIdLogada = tenantProvider.EmpresaId;
             if (empresaIdLogada == null || empresaIdLogada == Guid.Empty)
@@ -49,12 +53,15 @@ namespace AutoManager.Aplicacao.ModuloAluguel
             catch (Exception ex)
             {
                 unitOfWork.Rollback();
-                return Result<Aluguel>.Fail(ErrorResults.ErroInterno("Erro ao registrar aluguel"));
+                return Result<Aluguel>.Fail(ErrorResults.ErroInterno($"Erro ao registrar aluguel: {ex.Message}"));
             }
         }
 
         public Result<Aluguel> Editar(Aluguel entidade)
         {
+            if (!tenantProvider.IsInRole("Empresa") && !tenantProvider.IsInRole("Funcionario"))
+                return Result<Aluguel>.Fail(ErrorResults.PermissaoNegada("Somente Empresa ou Funcionário podem cadastrar aluguéis."));
+
             var aluguel = repositorioAluguel.SelecionarPorId(entidade.Id);
             if (aluguel == null)
                 return Result<Aluguel>.Fail(ErrorResults.RegistroNaoEncontrado(entidade.Id));
@@ -87,6 +94,9 @@ namespace AutoManager.Aplicacao.ModuloAluguel
         //Uso Exclusivo do Usuario Administrador 'Empresa'
         public Result Excluir(Guid id)
         {
+            if (!tenantProvider.IsInRole("Empresa"))
+                return Result<Aluguel>.Fail(ErrorResults.PermissaoNegada("Somente usuário Empresa pode excluir alugueis."));
+
             var aluguel = repositorioAluguel.SelecionarPorId(id);
             if (aluguel == null)
                 return Result.Fail(ErrorResults.RegistroNaoEncontrado(id));
@@ -111,6 +121,10 @@ namespace AutoManager.Aplicacao.ModuloAluguel
 
         public Result<Aluguel> SelecionarPorId(Guid id)
         {
+            if (!tenantProvider.IsInRole("Empresa") && !tenantProvider.IsInRole("Funcionario"))
+            return Result<Aluguel>.Fail(ErrorResults.PermissaoNegada("Somente Empresa ou Funcionário podem consultar aluguéis."));
+
+
             var aluguel = repositorioAluguel.SelecionarPorId(id);
 
             if (aluguel == null)
@@ -119,13 +133,20 @@ namespace AutoManager.Aplicacao.ModuloAluguel
             return Result<Aluguel>.Ok(aluguel);
         }
 
-        public List<Aluguel> SelecionarTodos()
+        public Result<List<Aluguel>> SelecionarTodos()
         {
-            return repositorioAluguel.SelecionarTodos();
+            if (!tenantProvider.IsInRole("Empresa") && !tenantProvider.IsInRole("Funcionario"))
+                return Result<List<Aluguel>>.Fail(ErrorResults.PermissaoNegada("Somente Empresa ou Funcionário podem listar aluguéis."));
+
+            var lista = repositorioAluguel.SelecionarTodos();
+            return Result<List<Aluguel>>.Ok(lista);
         }
 
         public Result<Aluguel> FinalizarAluguel(Guid id, DateTime dataDevolucao, decimal valorFinal)
         {
+            if (!tenantProvider.IsInRole("Empresa") && !tenantProvider.IsInRole("Funcionario"))
+                return Result<Aluguel>.Fail(ErrorResults.PermissaoNegada("Somente Empresa ou Funcionário podem finalizar aluguéis."));
+
             var aluguel = repositorioAluguel.SelecionarPorId(id);
             if (aluguel == null)
                 return Result<Aluguel>.Fail(ErrorResults.RegistroNaoEncontrado(id));
@@ -153,6 +174,9 @@ namespace AutoManager.Aplicacao.ModuloAluguel
 
         public Result<Aluguel> CancelarAluguel(Guid id)
         {
+            if (!tenantProvider.IsInRole("Empresa") && !tenantProvider.IsInRole("Funcionario"))
+                return Result<Aluguel>.Fail(ErrorResults.PermissaoNegada("Somente Empresa ou Funcionário podem cancelar aluguéis."));
+
             var aluguel = repositorioAluguel.SelecionarPorId(id);
             if (aluguel == null)
                 return Result<Aluguel>.Fail(ErrorResults.RegistroNaoEncontrado(id));

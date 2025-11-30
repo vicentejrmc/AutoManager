@@ -40,7 +40,7 @@ public class CondutorAppService : IAppService<Condutor>
 
         var resultadoValidacao = validador.Validar(entidade);
         if (resultadoValidacao.Falha)
-            return Result<Condutor>.Fail(resultadoValidacao.Mensagem);
+            return Result<Condutor>.Fail(ErrorResults.RequisicaoInvalida(resultadoValidacao.Mensagem));
 
         try
         {
@@ -87,7 +87,7 @@ public class CondutorAppService : IAppService<Condutor>
 
         var resultadoValidacao = validador.Validar(entidade);
         if (resultadoValidacao.Falha)
-            return Result<Condutor>.Fail(resultadoValidacao.Mensagem);
+            return Result<Condutor>.Fail(ErrorResults.RequisicaoInvalida(resultadoValidacao.Mensagem));
 
         try
         {
@@ -113,8 +113,8 @@ public class CondutorAppService : IAppService<Condutor>
         if (condutor == null)
             return Result.Fail(ErrorResults.RegistroNaoEncontrado(id));
 
-        if (!tenantProvider.IsInRole("Empresa"))
-            return Result.Fail(ErrorResults.PermissaoNegada("Somente usuários Empresa podem excluir condutores."));
+        if (!tenantProvider.IsInRole("Empresa") && !tenantProvider.IsInRole("Funcionario"))
+            return Result.Fail(ErrorResults.PermissaoNegada("Somente usuários Empresa ou Funcionário podem excluir condutores."));
 
         var empresaIdLogada = tenantProvider.EmpresaId;
         if (empresaIdLogada == null || condutor.EmpresaId != empresaIdLogada.Value)
@@ -145,11 +145,12 @@ public class CondutorAppService : IAppService<Condutor>
         return Result<Condutor>.Ok(condutor);
     }
 
-    public List<Condutor> SelecionarTodos()
+    public Result<List<Condutor>> SelecionarTodos()
     {
         if (!tenantProvider.IsInRole("Empresa") && !tenantProvider.IsInRole("Funcionario"))
-            return new List<Condutor>();
+            return Result<List<Condutor>>.Fail(ErrorResults.PermissaoNegada("Somente Empresa ou Funcionário podem listar condutores."));
 
-        return repositorioCondutor.SelecionarTodos();
+        var lista = repositorioCondutor.SelecionarTodos();
+        return Result<List<Condutor>>.Ok(lista);
     }
 }

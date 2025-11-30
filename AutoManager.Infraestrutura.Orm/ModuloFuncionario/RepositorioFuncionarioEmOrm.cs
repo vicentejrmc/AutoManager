@@ -1,6 +1,6 @@
 ﻿using AutoManager.Dominio.ModuloFuncionario;
 using AutoManager.Infraestrutura.Orm.Compartilhado;
-using AutoManeger.Dominio.ModuloFuncionario;
+using AutoManager.Dominio.ModuloFuncionario;
 using Microsoft.EntityFrameworkCore;
 
 
