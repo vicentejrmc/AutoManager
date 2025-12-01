@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AutoManager.Infraestrutura.Orm.ModuloCondutor;
 
-public class RepositorioCondutorEmOrm : IEntityTypeConfiguration<Condutor>
+public class MapeadorCondutorEmOrm : IEntityTypeConfiguration<Condutor>
 {
     public void Configure(EntityTypeBuilder<Condutor> builder)
     {

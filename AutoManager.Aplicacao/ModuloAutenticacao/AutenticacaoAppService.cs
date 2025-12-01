@@ -5,7 +5,6 @@ using AutoManager.Dominio.ModuloFuncionario;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
-using AutoManager.Dominio.ModuloFuncionario;
 using AutoManager.Dominio.Compartilhado;
 
 namespace AutoManager.Aplicacao.ModuloAutenticacao;

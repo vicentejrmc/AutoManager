@@ -2,7 +2,7 @@
 using AutoManager.Infraestrutura.Orm.Compartilhado;
 using Microsoft.EntityFrameworkCore;
 
-namespace AutoManager.Infraestrutura.Orm.ModuloCondutores;
+namespace AutoManager.Infraestrutura.Orm.ModuloCondutor;
 
 public class RepositorioCondutorEmOrm : RepositorioBaseEmOrm<Condutor>, IRepositorioCondutor
 {

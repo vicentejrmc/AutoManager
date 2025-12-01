@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace AutoManager.Infraestrutura.Orm.ModuloAutenticacao;
 
-internal class TenantProvider : ITenantProvider
+public class TenantProvider : ITenantProvider
 {
     private readonly IHttpContextAccessor httpContextAccessor;
 
