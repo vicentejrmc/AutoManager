@@ -34,16 +34,5 @@ public class MapeadorClienteEmOrm : IEntityTypeConfiguration<Cliente>
         builder.HasDiscriminator<string>("TipoCliente")
             .HasValue<PessoaFisica>("PessoaFisica")
             .HasValue<PessoaJuridica>("PessoaJuridica");
-
-        //configurações específicas para PessoaFisica
-        builder.HasIndex("CPF").IsUnique();
-        builder.Property<string>("CPF").HasMaxLength(11);
-        builder.Property<string>("RG").HasMaxLength(20);
-        builder.Property<string>("CNH").HasMaxLength(20);
-
-        //configurações específicas para PessoaJuridica
-        builder.HasIndex("CNPJ").IsUnique();
-        builder.Property<string>("CNPJ").HasMaxLength(14);
-
     }
 }

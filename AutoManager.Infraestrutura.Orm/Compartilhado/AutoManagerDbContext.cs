@@ -10,6 +10,7 @@ using AutoManager.Dominio.ModuloGrupoAutomovel;
 using AutoManager.Dominio.ModuloPlanoCobranca;
 using AutoManager.Dominio.ModuloPrecoCombustivel;
 using AutoManager.Dominio.ModuloTaxaServico;
+using AutoManager.Infraestrutura.Orm.ModuloCliente;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -62,6 +63,10 @@ public class AutoManagerDbContext : IdentityDbContext, IUnitOfWork
 
             modelBuilder.Entity<Cliente>()
               .HasQueryFilter(x => tenantProvider.EmpresaId != null && x.EmpresaId.Equals(tenantProvider.EmpresaId));
+
+            modelBuilder.ApplyConfiguration(new MapeadorPessoaFisicaEmOrm());
+            
+            modelBuilder.ApplyConfiguration(new MapeadorPessoaJuridicaEmOrm());
 
             modelBuilder.Entity<Condutor>()
               .HasQueryFilter(x => tenantProvider.EmpresaId != null && x.EmpresaId.Equals(tenantProvider.EmpresaId));
