@@ -25,4 +25,8 @@
     <ProjectReference Include="..\AutoManager.Infraestrutura.Orm\AutoManager.Infraestrutura.Orm.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
 </Project>
