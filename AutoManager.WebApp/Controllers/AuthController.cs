@@ -1,6 +1,5 @@
 ﻿using AutoManager.WebApp.Models;
 using AutoManager.Aplicacao.DTOs;
-using AutoManager.Aplicacao.Enums;
 using AutoManager.Aplicacao.ModuloAutenticacao;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,7 +28,7 @@ namespace AutoManager.WebApp.Controllers
 
             var dto = new LoginDto
             {
-                UsuarioOuEmail = model.UsuarioOuEmail,
+                UsuarioOuEmail = model.Email,
                 Senha = model.Senha,
                 TipoUsuario = model.TipoUsuario
             };

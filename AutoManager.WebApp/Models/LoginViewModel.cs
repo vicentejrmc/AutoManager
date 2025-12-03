@@ -6,7 +6,7 @@ namespace AutoManager.WebApp.Models
     public class LoginViewModel
     {
         [Required(ErrorMessage = "Email ou usuário é obrigatório.")]
-        public string UsuarioOuEmail { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Senha é obrigatória.")]
         [DataType(DataType.Password)]

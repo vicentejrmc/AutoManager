@@ -1,0 +1,54 @@
+﻿@using AutoManager.Aplicacao.Enums
+@model AutoManager.WebApp.Models.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title text-center mb-4">Login na sua conta</h4>
+
+                    <form asp-action="Login" method="post">
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" placeholder="Email ou usuário" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Senha" class="form-label"></label>
+                            <input asp-for="Senha" class="form-control" placeholder="Senha" />
+                            <span asp-validation-for="Senha" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TipoUsuario" class="form-label">Tipo de usuário</label>
+                            <select asp-for="TipoUsuario" class="form-select" asp-items="Html.GetEnumSelectList<TipoUsuarioEnum>()">
+                                <option value="">Selecione</option>
+                            </select>
+                            <span asp-validation-for="TipoUsuario" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Entrar</button>
+                        </div>
+                    </form>
+
+                    <div class="mt-4 text-center">
+                        <a asp-action="CadastroEmpresa" asp-controller="Auth" class="text-decoration-none">Não tem conta? Cadastre sua empresa</a>
+                        <br />
+                        <a href="#" class="text-decoration-none">Esqueceu sua senha?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
