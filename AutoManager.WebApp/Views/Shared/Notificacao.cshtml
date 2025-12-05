@@ -1,0 +1,11 @@
+﻿@{
+    var mensagem = TempData["Mensagem"];
+    var tipo = TempData["Tipo"] ?? "info";
+}
+
+<div class="container mt-5">
+    <div class="alert alert-@tipo">
+        @mensagem
+    </div>
+    <a asp-controller="Autenticacao" asp-action="Login" class="btn btn-primary mt-3">Voltar ao Login</a>
+</div>
