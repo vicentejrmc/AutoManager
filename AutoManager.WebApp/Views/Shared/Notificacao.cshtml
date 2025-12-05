@@ -1,11 +1,19 @@
 ﻿@{
     var mensagem = TempData["Mensagem"];
     var tipo = TempData["Tipo"] ?? "info";
+    var nomeEmpresa = TempData["NomeEmpresa"];
 }
 
 <div class="container mt-5">
     <div class="alert alert-@tipo">
-        @mensagem
+        <strong>@mensagem</strong>
+        @if (nomeEmpresa != null)
+        {
+            <p class="mt-2">Bem-vindo(a), <span class="fw-bold">@nomeEmpresa</span> 🎉</p>
+        }
     </div>
-    <a asp-controller="Autenticacao" asp-action="Login" class="btn btn-primary mt-3">Voltar ao Login</a>
+
+    <a asp-controller="Autenticacao" asp-action="Login" class="btn btn-primary mt-3">
+        Voltar ao Login
+    </a>
 </div>

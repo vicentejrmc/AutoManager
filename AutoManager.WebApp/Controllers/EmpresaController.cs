@@ -32,7 +32,10 @@ namespace AutoManager.WebApp.Controllers
             TempData["Mensagem"] = result.Falha
                 ? result.Mensagem
                 : "Empresa registrada com sucesso.";
+
             TempData["Tipo"] = result.Falha ? "danger" : "success";
+
+            TempData["NomeEmpresa"] = entidade.Usuario;
 
             return RedirectToAction("Notificacao", "Shared");
         }
