@@ -4,9 +4,8 @@ namespace AutoManager.WebApp.Controllers;
 
 public class SharedController : Controller
 {
-    public IActionResult Index()
+    public IActionResult Notificacao()
     {
-        // A view Notificacao.cshtml em Views/Shared será renderizada
-        return View();
+        return View("Notificacao");
     }
 }
