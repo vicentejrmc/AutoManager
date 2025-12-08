@@ -10,10 +10,11 @@ namespace AutoManager.Apresentacao.DependencyInjection
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.LoginPath = "/Account/Login";          // rota de login
-                    options.AccessDeniedPath = "/Account/AccessDenied"; // rota de acesso negado
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);     // tempo de expiração do cookie
-                    options.SlidingExpiration = true;                   // renova cookie se usuário estiver ativo
+                    options.LoginPath = "/Autenticacao/Login";
+                    options.AccessDeniedPath = "/Autenticacao/AcessoNegado";
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
+                    options.SlidingExpiration = true;
+
                 });
 
             // Autorização com validação de Tenant

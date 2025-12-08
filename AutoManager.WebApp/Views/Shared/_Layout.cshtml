@@ -1,39 +1,50 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - AutoManager</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/AutoManager.WebApp.styles.css" asp-append-version="true" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AutoManager</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
-        </nav>
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- Barra superior -->
+    <header class="navbar navbar-dark bg-primary shadow-sm">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">AutoManager</span>
+        </div>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+
+    <div class="d-flex flex-grow-1">
+        <!-- Menu lateral -->
+        <nav class="bg-dark text-white p-3" style="width:250px;">
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link text-white" asp-controller="Home" asp-action="Index">🏠 Início</a></li>
+                <li class="nav-item"><a class="nav-link text-white" asp-controller="Funcionario" asp-action="Index">Funcionários</a></li>
+                <li class="nav-item"><a class="nav-link text-white" asp-controller="Automovel" asp-action="Index">Automóveis</a></li>
+                <li class="nav-item"><a class="nav-link text-white" asp-controller="GrupoAutomovel" asp-action="Index">Grupo Automóvel</a></li>
+                <li class="nav-item"><a class="nav-link text-white" asp-controller="Cliente" asp-action="Index">Clientes</a></li>
+                <li class="nav-item"><a class="nav-link text-white" asp-controller="Condutor" asp-action="Index">Condutores</a></li>
+                <li class="nav-item"><a class="nav-link text-white" asp-controller="TaxaServico" asp-action="Index">Taxas e Serviços</a></li>
+                <li class="nav-item"><a class="nav-link text-white" asp-controller="Aluguel" asp-action="Index">Aluguéis</a></li>
+                <li class="nav-item"><a class="nav-link text-white" asp-controller="Parceiro" asp-action="Index">Parceiros</a></li>
+                <li class="nav-item"><a class="nav-link text-white" asp-controller="Cupom" asp-action="Index">Cupons</a></li>
+            </ul>
+        </nav>
+
+        <!-- Conteúdo principal -->
+        <main class="flex-grow-1 p-4 bg-light">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - AutoManager<a asp-area="" asp-controller="Home" asp-action="Privacy"></a>
-        </div>
+    <!-- Rodapé -->
+    <footer class="bg-light text-center border-top py-3 mt-auto">
+        <small>&copy; @DateTime.Now.Year - AutoManager</small>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

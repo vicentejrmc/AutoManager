@@ -5,6 +5,7 @@ using AutoManager.Dominio.ModuloFuncionario;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using AutoManager.Dominio.Compartilhado;
 
 namespace AutoManager.Aplicacao.ModuloAutenticacao;
@@ -143,10 +144,21 @@ public class AutenticacaoAppService
             new Claim("EmpresaId", empresa?.Id.ToString() ?? funcionario!.EmpresaId.ToString()),
         };
 
-        var identity = new ClaimsIdentity(claims, "Login");
+        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         var principal = new ClaimsPrincipal(identity);
 
-        await httpContextAccessor.HttpContext!.SignInAsync(principal);
+        var authProperties = new AuthenticationProperties
+        {
+            IsPersistent = false,
+            ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(15)
+        };
+
+
+
+        await httpContextAccessor.HttpContext!.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            principal,
+            authProperties);
 
         return Result.Ok("Login realizado com sucesso.");
     }

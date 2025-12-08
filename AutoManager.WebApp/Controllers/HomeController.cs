@@ -6,6 +6,13 @@ namespace AutoManager.WebApp.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        public IActionResult Index() => View();
+        public IActionResult Index()
+        {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Login", "Autenticacao");
+
+            ViewData["Title"] = "Home";
+            return View();
+        }
     }
 }

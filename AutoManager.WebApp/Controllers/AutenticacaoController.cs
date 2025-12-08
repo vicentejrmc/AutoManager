@@ -17,7 +17,7 @@ namespace AutoManager.WebApp.Controllers
         public IActionResult Login() => View(new LoginViewModel());
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel vm)
+        public async Task<IActionResult> Login(LoginViewModel vm, string? returnUrl = null)
         {
             if (!ModelState.IsValid)
                 return View(vm);
@@ -28,7 +28,7 @@ namespace AutoManager.WebApp.Controllers
             {
                 TempData["Mensagem"] = result.Mensagem;
                 TempData["Tipo"] = "danger";
-                return RedirectToAction("Notificacao", "Shared");
+                return View(vm);
             }
 
             return RedirectToAction("Index", "Home");

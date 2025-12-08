@@ -1,8 +1,35 @@
 ﻿@{
+    Layout = "_Layout";
     ViewData["Title"] = "Home";
 }
 
-<div class="container mt-5">
-    <h3>Bem-vindo ao AutoManager</h3>
-    <p>Use o menu lateral para navegar pelas funcionalidades.</p>
+<div class="container mt-5 text-center">
+    <h1 class="mb-4">Bem-vindo ao <span class="text-success">AutoManager</span> 🚗</h1>
+    <p class="lead">Sistema completo para gestão de locadoras de veículos.</p>
+
+    <div class="mt-4">
+        <a asp-controller="Empresa" asp-action="Cadastrar" class="btn btn-success btn-lg me-3">
+            Cadastrar Empresa
+        </a>
+        <a asp-controller="Autenticacao" asp-action="Login" class="btn btn-primary btn-lg">
+            Login
+        </a>
+    </div>
+
+    <hr class="my-5" />
+
+    <div class="row">
+        <div class="col-md-4">
+            <h5>🚘 Gestão de Veículos</h5>
+            <p>Cadastre, edite e acompanhe sua frota.</p>
+        </div>
+        <div class="col-md-4">
+            <h5>👥 Clientes e Condutores</h5>
+            <p>Controle completo de pessoas físicas e jurídicas.</p>
+        </div>
+        <div class="col-md-4">
+            <h5>💰 Planos e Cobranças</h5>
+            <p>Defina planos, taxas e serviços adicionais.</p>
+        </div>
+    </div>
 </div>
