@@ -11,7 +11,7 @@ namespace AutoManager.WebApp.Controllers
             if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Login", "Autenticacao");
 
-            ViewData["Title"] = "Home";
+            ViewData["Title"] = "Login";
             return View();
         }
     }

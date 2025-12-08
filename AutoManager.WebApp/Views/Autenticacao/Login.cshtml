@@ -7,41 +7,42 @@
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-5">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h4 class="card-title text-center mb-4">Login na sua conta</h4>
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-lg rounded-4 border-0">
+                <div class="card-body p-4">
+                    <h3 class="card-title text-center fw-bold mb-4 text-primary">Bem-vindo ao AutoManager</h3>
 
                     <form asp-action="Login" method="post">
-                        <div class="mb-3">
-                            <label asp-for="Email" class="form-label"></label>
+                        <div class="mb-3 input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
                             <input asp-for="Email" class="form-control" placeholder="Email ou usuário" />
-                            <span asp-validation-for="Email" class="text-danger small"></span>
                         </div>
+                        <span asp-validation-for="Email" class="text-danger small"></span>
 
-                        <div class="mb-3">
-                            <label asp-for="Senha" class="form-label"></label>
-                            <input asp-for="Senha" class="form-control" placeholder="Senha" />
-                            <span asp-validation-for="Senha" class="text-danger small"></span>
+                        <div class="mb-3 input-group">
+                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                            <input asp-for="Senha" type="password" class="form-control" placeholder="Senha" />
                         </div>
+                        <span asp-validation-for="Senha" class="text-danger small"></span>
 
                         <div class="mb-3">
                             <label asp-for="TipoUsuario" class="form-label">Tipo de usuário</label>
                             <select asp-for="TipoUsuario" class="form-select" asp-items="Html.GetEnumSelectList<TipoUsuarioEnum>()">
                                 <option value="">Selecione</option>
                             </select>
-                            <span asp-validation-for="TipoUsuario" class="text-danger small"></span>
                         </div>
 
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Entrar</button>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-box-arrow-in-right"></i> Entrar
+                            </button>
                         </div>
                     </form>
 
                     <div class="mt-4 text-center">
-                        <a asp-action="Cadastrar" asp-controller="Empresa" class="text-decoration-none">Não tem conta? Cadastre sua empresa</a>
+                        <a asp-action="Cadastrar" asp-controller="Empresa" class="small text-muted">Não tem conta? Cadastre sua empresa</a>
                         <br />
-                        <a href="#" class="text-decoration-none">Esqueceu sua senha?</a>
+                        <a href="#" class="small text-muted">Esqueceu sua senha?</a>
                     </div>
                 </div>
             </div>
